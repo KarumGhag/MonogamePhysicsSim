@@ -26,10 +26,8 @@ class PhysicsObject : Entity
     public override void Update(GameTime gameTime)
     {
 
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-
         base.Update(gameTime);
+
 
         position += velocity;
 

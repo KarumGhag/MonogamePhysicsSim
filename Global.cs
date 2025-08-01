@@ -12,4 +12,7 @@ namespace GlobalInfo;
 public static class Global
 {
     public static MouseState mouseState;
+    public static GameTime gameTime;
+    public static float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
 }

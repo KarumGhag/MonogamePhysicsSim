@@ -87,7 +87,7 @@ public class Game1 : Game
 
         // updates global states
         Global.mouseState = Mouse.GetState();
-
+        Global.gameTime = gameTime;
 
 
         _spriteBatch.Begin();
