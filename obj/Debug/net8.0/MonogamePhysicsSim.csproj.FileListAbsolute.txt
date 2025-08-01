@@ -30,3 +30,4 @@ c:\Users\karum\Desktop\0Vscode\c#\MonogamePhysicsSim\obj\Debug\net8.0\MonogamePh
 c:\Users\karum\Desktop\0Vscode\c#\MonogamePhysicsSim\obj\Debug\net8.0\MonogamePhysicsSim.genruntimeconfig.cache
 c:\Users\karum\Desktop\0Vscode\c#\MonogamePhysicsSim\obj\Debug\net8.0\ref\MonogamePhysicsSim.dll
 c:\Users\karum\Desktop\0Vscode\c#\MonogamePhysicsSim\bin\Debug\net8.0\Content\circle.xnb
+c:\Users\karum\Desktop\0Vscode\c#\MonogamePhysicsSim\obj\Debug\net8.0\MonogamePhysicsSim.sourcelink.json

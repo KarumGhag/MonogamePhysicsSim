@@ -14,7 +14,7 @@ class PhysicsObject : Entity
 
     public Vector2 velocity;
 
-    public PhysicsObject(Texture2D sprite, Vector2 position) : base(sprite, position)
+    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities) : base(sprite, position, entities)
     {
 
     }
