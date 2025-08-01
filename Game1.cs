@@ -1,7 +1,11 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using EntityClass;
+using PhysicsClass;
 
 namespace MonogamePhysicsSim;
 
@@ -15,9 +19,8 @@ public class Game1 : Game
     private Vector2 _center;
 
 
-
-    
-
+    public List<Entity> Entities;
+    public Entity player;
 
 
 
@@ -32,10 +35,20 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
 
+        _graphics.PreferredBackBufferWidth = 1280;  // set width
+        _graphics.PreferredBackBufferHeight = 720;  // set height
+        _graphics.ApplyChanges();                  // apply the change
+
+
+
         int screenWidth = GraphicsDevice.Viewport.Width;
         int screenHeight = GraphicsDevice.Viewport.Height;
 
         _center = new Vector2(screenWidth / 2, screenHeight / 2);
+
+
+
+
 
         base.Initialize();
     }
@@ -45,6 +58,11 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         _circle = Content.Load<Texture2D>("circle");
+
+        player = new PhysicsObject(_circle, _center);
+
+        Entities = new List<Entity>();
+        Entities.Add(player);
 
         // TODO: use this.Content to load your game content here
     }
@@ -66,10 +84,16 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        _spriteBatch.Draw(_circle, _center, Color.White);
+        // _spriteBatch.Draw(_circle, _center, Color.White);
+
+        for (int i = 0; i < Entities.Count; i++)
+        {
+            Entities[i].Update(gameTime);
+            _spriteBatch.Draw(Entities[i].sprite, Entities[i].position, Color.White);
+        }
 
         _spriteBatch.End();
-        
+
 
         base.Draw(gameTime);
     }
