@@ -14,17 +14,18 @@ namespace MonogamePhysicsSim;
 public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
-    private int screenWidth = 1280;
-    private int screenHeight = 720;
+
+    private int _screenWidth = 1280;
+    private int _screenHeight = 720;
+
     private SpriteBatch _spriteBatch;
 
     private Texture2D _circle;
-
     private Vector2 _center;
 
 
-    public List<Entity> Entities;
-    public static Entity player;
+    public List<Entity> entities;
+    public static Entity _player;
 
 
 
@@ -41,12 +42,12 @@ public class Game1 : Game
 
 
         // Resizes
-        _graphics.PreferredBackBufferWidth = screenWidth;  // set width
-        _graphics.PreferredBackBufferHeight = screenHeight;  // set height
+        _graphics.PreferredBackBufferWidth = _screenWidth;  // set width
+        _graphics.PreferredBackBufferHeight = _screenHeight;  // set height
         _graphics.ApplyChanges();                  // apply the change
 
 
-        _center = new Vector2(screenWidth / 2, screenHeight / 2);
+        _center = new Vector2(_screenWidth / 2, _screenHeight / 2);
 
 
 
@@ -61,10 +62,10 @@ public class Game1 : Game
         _circle = Content.Load<Texture2D>("circle");
 
         // Initalises the entity list
-        Entities = new List<Entity>();
+        entities = new List<Entity>();
 
         // Instantiates objects
-        player = new PhysicsObject(_circle, _center, Entities);
+        _player = new PhysicsObject(_circle, _center, entities);
 
 
 
@@ -91,11 +92,11 @@ public class Game1 : Game
 
         _spriteBatch.Begin();
 
-        // Loops over all entites updates then draws them
-        for (int i = 0; i < Entities.Count; i++)
+        // Loops over all _entites updates then draws them
+        for (int i = 0; i < entities.Count; i++)
         {
-            Entities[i].Update(gameTime);
-            _spriteBatch.Draw(Entities[i].sprite, Entities[i].position, Color.White);
+            entities[i].Update(gameTime);
+            _spriteBatch.Draw(entities[i].sprite, entities[i].position, Color.White);
         }
 
         _spriteBatch.End();
