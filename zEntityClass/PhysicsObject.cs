@@ -10,13 +10,9 @@ using GlobalInfo;
 
 namespace PhysicsClass;
 
-class PhysicsObject : Entity
+public class PhysicsObject : Entity
 {
-
-    private Vector2 mousePos;
     public Vector2 velocity;
-    private float speed = 500;
-    private Vector2 direction;
 
     public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities) : base(sprite, position, entities)
     {
@@ -30,13 +26,6 @@ class PhysicsObject : Entity
 
 
         position += velocity;
-
-        mousePos = new Vector2(Global.mouseState.X, Global.mouseState.Y);
-
-        direction = mousePos - position;
-        direction = Vector2.Normalize(direction);
-
-        velocity = direction * speed * deltaTime;
 
     }
 

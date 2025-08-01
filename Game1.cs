@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using EntityClass;
 using PhysicsClass;
 using GlobalInfo;
+using FollowClass;
 
 namespace MonogamePhysicsSim;
 
@@ -65,7 +66,7 @@ public class Game1 : Game
         entities = new List<Entity>();
 
         // Instantiates objects
-        _player = new PhysicsObject(_circle, _center, entities);
+        _player = new FollowObject(_circle, _center, entities);
 
 
 
@@ -88,6 +89,7 @@ public class Game1 : Game
         // updates global states
         Global.mouseState = Mouse.GetState();
         Global.gameTime = gameTime;
+        Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
         _spriteBatch.Begin();
