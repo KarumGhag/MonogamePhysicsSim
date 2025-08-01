@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>c:/Users/karum/Desktop/0Vscode/c#/MonogamePhysicsSim/Content/circle.png</File>
+    <File>C:/Users/karum/Desktop/0Vscode/c#/MonogamePhysicsSim/Content/circle.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
