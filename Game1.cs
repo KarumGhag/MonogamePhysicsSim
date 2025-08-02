@@ -8,6 +8,7 @@ using EntityClass;
 using PhysicsClass;
 using GlobalInfo;
 using FollowClass;
+using SpringClass;
 
 namespace MonogamePhysicsSim;
 
@@ -27,6 +28,12 @@ public class Game1 : Game
 
     public List<Entity> entities;
     public static Entity _player;
+
+    public PhysicsObject point1;
+    public PhysicsObject point2;
+    public Spring spring;
+
+    public List<PhysicsObject> shape;
 
 
 
@@ -69,11 +76,18 @@ public class Game1 : Game
 
         // Initalises the entity list
         entities = new List<Entity>();
-
+        shape = new List<PhysicsObject>();
         // Instantiates objects
         _player = new FollowObject(_circle, _center, entities);
 
-        
+
+        point1 = new PhysicsObject(_circle, _center - new Vector2(100, 0), entities, (float)1.1);
+        point2 = new PhysicsObject(_circle, _center + new Vector2(100, 0), entities, (float) 1.1);
+
+        spring = new Spring(point1, point2, (float)0.5, (float)1, 100);
+
+        shape.Add(point1);
+        shape.Add(point2);
 
     }
 
@@ -104,6 +118,11 @@ public class Game1 : Game
         {
             entities[i].Update(gameTime);
             _spriteBatch.Draw(entities[i].sprite, entities[i].position, Color.White);
+        }
+
+        for (int i = 0; i < shape.Count; i++)
+        {
+            shape[i].ApplyForce(spring.GetForce(shape[i]));
         }
 
         _spriteBatch.End();
