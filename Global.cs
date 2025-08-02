@@ -16,12 +16,12 @@ public static class Global
     public static GameTime gameTime;
     public static float deltaTime;
 
-    public static double GetVectorLen(Vector2 vector)
+    public static float GetVectorLen(Vector2 vector)
     {
         double xLen = Math.Pow(vector.X, 2);
         double yLen = Math.Pow(vector.Y, 2);
 
-        return Math.Sqrt(xLen + yLen);
+        return (float)Math.Sqrt(xLen + yLen);
         
     }
 
