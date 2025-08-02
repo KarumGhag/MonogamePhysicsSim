@@ -55,6 +55,11 @@ public class Game1 : Game
         base.Initialize();
     }
 
+
+
+
+
+
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -68,7 +73,7 @@ public class Game1 : Game
         // Instantiates objects
         _player = new FollowObject(_circle, _center, entities);
 
-
+        
 
     }
 

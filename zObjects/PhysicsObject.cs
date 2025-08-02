@@ -21,11 +21,12 @@ public class PhysicsObject : Entity
 
     public override void Update(GameTime gameTime)
     {
-
         base.Update(gameTime);
-
-
         position += velocity;
+    }
+
+    public virtual void ApplyForce(float forceSize, float forceDirection)
+    {
 
     }
 
