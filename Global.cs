@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
@@ -14,5 +15,14 @@ public static class Global
     public static MouseState mouseState;
     public static GameTime gameTime;
     public static float deltaTime;
+
+    public static double GetVectorLen(Vector2 vector)
+    {
+        double xLen = Math.Pow(vector.X, 2);
+        double yLen = Math.Pow(vector.Y, 2);
+
+        return Math.Sqrt(xLen + yLen);
+        
+    }
 
 }
