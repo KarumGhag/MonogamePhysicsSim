@@ -22,15 +22,27 @@ public class PhysicsObject : Entity
     private bool stationary;
     public float mass;
 
+    private Vector2 spawnPos;
+
+
+
     public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, float mass, bool stationary = false)
         : base(sprite, position, entities)
     {
         this.stationary = stationary;
         this.mass = mass;
+        spawnPos = position;
     }
 
     public override void Update(GameTime gameTime)
     {
+
+        KeyboardState keyboardState = Keyboard.GetState();
+        if (keyboardState.IsKeyDown(Keys.Space))
+        {
+            position = spawnPos;
+        }
+
         base.Update(gameTime);
 
         // Apply gravity as constant acceleration (per second²)
