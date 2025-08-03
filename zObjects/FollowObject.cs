@@ -18,7 +18,7 @@ public class FollowObject : PhysicsObject
     private Vector2 mousePosition;
     private float speed;
 
-    public FollowObject(Texture2D sprite, Vector2 position, List<Entity> entities, float speed = 500) : base(sprite, position, entities)
+    public FollowObject(Texture2D sprite, Vector2 position, List<Entity> entities, float speed = 500, float mass = 1) : base(sprite, position, entities, mass)
     {
         this.speed = speed;
     }

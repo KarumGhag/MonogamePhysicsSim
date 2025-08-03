@@ -9,41 +9,63 @@ using EntityClass;
 using GlobalInfo;
 using System.Threading;
 using System.Dynamic;
+using System.Data;
 
 namespace PhysicsClass;
 
 public class PhysicsObject : Entity
 {
     public Vector2 velocity;
+    public Vector2 acceleration;
 
-    public float gravity { get; set; } = 9;
+    public float fieldStrength { get; } = 650; // Pixels per second²
+    private bool stationary;
+    public float mass;
 
-    private bool stationary { get; set; } = false;
-
-    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, bool stationary = false, float gravity = 100) : base(sprite, position, entities)
+    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, float mass, bool stationary = false)
+        : base(sprite, position, entities)
     {
-        this.gravity = gravity;
         this.stationary = stationary;
+        this.mass = mass;
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        velocity.Y += gravity * Global.deltaTime;
-        
+
+        // Apply gravity as constant acceleration (per second²)
+        ApplyAcceleration(new Vector2(0, fieldStrength));
+
         if (!stationary)
         {
+            velocity += acceleration * Global.deltaTime;
             position += velocity * Global.deltaTime;
-
         }
+
+        // Reset acceleration at end of frame
+        acceleration = Vector2.Zero;
     }
 
-    public virtual void ApplyForce(Vector2 force)
+    public void ApplyForce(Vector2 force)
     {
-        if (!stationary)
-        {
-            velocity += force;
-        }
+        acceleration += force / mass;
+    
     }
 
+    public void ApplyAcceleration(Vector2 accel)
+    {
+        acceleration += accel;
+    }
 }
+
+
+    /* Newtons equations:
+
+        Force = Mass * Accelartion
+        Acceleration = Force / Mass
+        velocity += acceleration * deltaTime
+
+
+    */
+
+
