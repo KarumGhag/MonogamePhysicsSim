@@ -34,10 +34,17 @@ public class Game1 : Game
     public PhysicsObject point2;
     public PhysicsObject point3;
     public PhysicsObject point4;
+    public PhysicsObject point5;
+    public PhysicsObject point6;
+
+
     public Spring spring;
     public Spring spring2;
-
     public Spring spring3;
+    public Spring spring4;
+    public Spring spring5;
+    public Spring spring6;
+
 
     public List<Spring> shape;
 
@@ -91,22 +98,23 @@ public class Game1 : Game
         //_player = new FollowObject(_circle, _center, entities);
 
 
-        point1 = new PhysicsObject(_circle, _center - new Vector2(0, 0), entities, 1, true);
+        point1 = new PhysicsObject(_circle, _center + new Vector2(0, 0), entities, 1, true);
         point2 = new PhysicsObject(_circle, _center + new Vector2(200, 0), entities, 1f, false);
         point3 = new PhysicsObject(_circle, _center + new Vector2(300, -100), entities, 4f, false);
         point4 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, 1f, true);
+        point5 = new PhysicsObject(_circle, _center + new Vector2(250, 0), entities, 2f);
+        point6 = new PhysicsObject(_circle, _center + new Vector2(250, 0), entities, 1f);
 
         point2.velocity = new Vector2(0, -100);
         point3.velocity = new Vector2(1000, -200);
+        point6.velocity = new Vector2(0, 2000);
 
-        spring = new Spring(point1, point2, 100f, 3f, 50f);
-        spring2 = new Spring(point2, point3, 90f, 10f, 200f);
-        spring3 = new Spring(point3, point4, 30f, 1f, 50f);
-
-        shape.Add(spring);
-        // shape.Add(spring2);
-        shape.Add(spring3);
-
+        spring = new Spring(point1, point2, 100f, 3f, 50f, shape);
+        //spring2 = new Spring(point2, point3, 90f, 10f, 200f, shape);
+        spring3 = new Spring(point3, point4, 60f, 1f, 50f, shape);
+        spring4 = new Spring(point3, point5, 50f, 10f, 200f, shape);
+        spring5 = new Spring(point4, point5, 50f, 10f, 200f, shape);
+        spring6 = new Spring(point2, point6, 60f, 10f, 200f, shape);
 
 
     }
@@ -137,11 +145,10 @@ public class Game1 : Game
         for (int i = 0; i < shape.Count; i++)
         {
             shape[i].ApplyForce();
+            DrawLine(_spriteBatch, shape[i].pointA.position, shape[i].pointB.position, Color.White, 2.5f);
         }
 
         Console.WriteLine(point2.position);
-        DrawLine(_spriteBatch, _pixel, point3.position, point4.position, Color.Red, 2f);
-        DrawLine(_spriteBatch, _pixel, point1.position, point2.position, Color.Red, 2f);
 
 
         for (int i = 0; i < entities.Count; i++)
@@ -158,21 +165,14 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
-    public void DrawLine(SpriteBatch spriteBatch, Texture2D texture, Vector2 start, Vector2 end, Color color, float thickness = 1f)
+    public void DrawLine(SpriteBatch spriteBatch, Vector2 pointA, Vector2 pointB, Color color, float thickness = 1f)
     {
-        Vector2 edge = end - start;
-        float angle = (float)Math.Atan2(edge.Y, edge.X);
-        float length = edge.Length();
+        Vector2 delta = pointB - pointA;
+        float length = delta.Length();
+        float angle = (float)Math.Atan2(delta.Y, delta.X);
 
-        spriteBatch.Draw(texture,
-            position: start,
-            sourceRectangle: null,
-            color: color,
-            rotation: angle,
-            origin: new Vector2(0f, 0.5f), // this centers the texture vertically
-            scale: new Vector2(length, thickness),
-            effects: SpriteEffects.None,
-            layerDepth: 0f);
+        spriteBatch.Draw(_pixel, pointA, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
     }
+
 
 }
