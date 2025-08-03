@@ -10,6 +10,8 @@ using GlobalInfo;
 using FollowClass;
 using SpringClass;
 using System;
+using System.Security.Authentication;
+using RopeClass;
 
 namespace MonogamePhysicsSim;
 
@@ -47,7 +49,10 @@ public class Game1 : Game
     public Spring spring6;
     public Spring spring7;
 
+    public Rope rope;
+
     public List<Spring> shape;
+    public List<Rope> ropes;
 
 
 
@@ -87,12 +92,17 @@ public class Game1 : Game
 
         // Loads all textures
         _circle = Content.Load<Texture2D>("circle");
+        Global._circle = _circle;
+
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
 
         // Initalises the entity list
         entities = new List<Entity>();
         shape = new List<Spring>();
+        ropes = new List<Rope>();
+
+        Global.entities = entities;
 
 
         // Instantiates objects
@@ -120,6 +130,8 @@ public class Game1 : Game
         spring6 = new Spring(point2, point6, 60f, 10f, 200f, shape);
         spring7 = new Spring(point2, point7, 50f, 1f, 100f, shape);
 
+
+        rope = new Rope(5, 1, _center, ropes);
 
     }
 
@@ -152,15 +164,20 @@ public class Game1 : Game
             DrawLine(_spriteBatch, shape[i].pointA.position, shape[i].pointB.position, Color.White, 2.5f);
         }
 
-        Console.WriteLine(point2.position);
-
+        for (int i = 0; i < ropes.Count; i++)
+        {
+            for (int j = 0; j < ropes[i].points.Count; j++)
+            {
+                if (j == ropes[i].points.Count - 1) break;
+                DrawLine(_spriteBatch, ropes[i].points[j].position, ropes[i].points[j + 1].position, Color.White, 2f);
+            }
+        }
 
         for (int i = 0; i < entities.Count; i++)
-        {
-            entities[i].Update(gameTime);
-            _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
-
-        }
+            {
+                entities[i].Update(gameTime);
+                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
+            }
 
 
         _spriteBatch.End();
