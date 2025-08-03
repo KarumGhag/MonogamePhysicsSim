@@ -32,7 +32,9 @@ public class Game1 : Game
 
     public PhysicsObject point1;
     public PhysicsObject point2;
+    public PhysicsObject point3;
     public Spring spring;
+    public Spring spring2;
 
     public List<Spring> shape;
 
@@ -84,13 +86,15 @@ public class Game1 : Game
         //_player = new FollowObject(_circle, _center, entities);
 
 
-        point1 = new PhysicsObject(_circle, _center - new Vector2(500, 0), entities, (float)0);
-        point2 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, (float)0);
+        point1 = new PhysicsObject(_circle, _center - new Vector2(0, 0), entities, true, 0);
+        point2 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, false, 100);
+        point3 = new PhysicsObject(_circle, _center + new Vector2(500, 100), entities, false, 200);
 
-        spring = new Spring(point1, point2, (float)0.5, (float)0.05, 200);
+        spring = new Spring(point1, point2, (float)5, (float)0.5, 200);
+        spring2 = new Spring(point2, point3, (float)5, (float)0.5, 100);
 
         shape.Add(spring);
-        
+        shape.Add(spring2);        
         
         
 
