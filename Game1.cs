@@ -27,13 +27,13 @@ public class Game1 : Game
 
 
     public List<Entity> entities;
-    public static Entity _player;
+    public Entity _player;
 
     public PhysicsObject point1;
     public PhysicsObject point2;
     public Spring spring;
 
-    public List<PhysicsObject> shape;
+    public List<Spring> shape;
 
 
 
@@ -76,18 +76,22 @@ public class Game1 : Game
 
         // Initalises the entity list
         entities = new List<Entity>();
-        shape = new List<PhysicsObject>();
+        shape = new List<Spring>();
+
+
         // Instantiates objects
-        _player = new FollowObject(_circle, _center, entities);
+        //_player = new FollowObject(_circle, _center, entities);
 
 
-        point1 = new PhysicsObject(_circle, _center - new Vector2(100, 0), entities, (float)1.1);
-        point2 = new PhysicsObject(_circle, _center + new Vector2(100, 0), entities, (float) 1.1);
+        point1 = new PhysicsObject(_circle, _center - new Vector2(500, 0), entities, (float)0);
+        point2 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, (float)0);
 
-        spring = new Spring(point1, point2, (float)0.5, (float)1, 100);
+        spring = new Spring(point1, point2, (float)0.07, (float)0.2, 200);
 
-        shape.Add(point1);
-        shape.Add(point2);
+        shape.Add(spring);
+        
+        
+        
 
     }
 
@@ -114,16 +118,18 @@ public class Game1 : Game
         _spriteBatch.Begin();
 
         // Loops over all _entites updates then draws them
+        for (int i = 0; i < shape.Count; i++)
+        {
+            shape[i].ApplyForce();
+        }
+        
+        
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].Update(gameTime);
             _spriteBatch.Draw(entities[i].sprite, entities[i].position, Color.White);
         }
 
-        for (int i = 0; i < shape.Count; i++)
-        {
-            shape[i].ApplyForce(spring.GetForce(shape[i]));
-        }
 
         _spriteBatch.End();
 
