@@ -9,6 +9,7 @@ using PhysicsClass;
 using GlobalInfo;
 using FollowClass;
 using SpringClass;
+using System;
 
 namespace MonogamePhysicsSim;
 
@@ -86,7 +87,7 @@ public class Game1 : Game
         point1 = new PhysicsObject(_circle, _center - new Vector2(500, 0), entities, (float)0);
         point2 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, (float)0);
 
-        spring = new Spring(point1, point2, (float)0.07, (float)0.2, 200);
+        spring = new Spring(point1, point2, (float)0.5, (float)0.05, 200);
 
         shape.Add(spring);
         
@@ -122,6 +123,8 @@ public class Game1 : Game
         {
             shape[i].ApplyForce();
         }
+
+        Console.WriteLine(_center.X < point1.position.X);
         
         
         for (int i = 0; i < entities.Count; i++)
