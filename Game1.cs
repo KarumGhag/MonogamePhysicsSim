@@ -61,6 +61,9 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        IsFixedTimeStep = true;
+
     }
 
     protected override void Initialize()
@@ -141,24 +144,17 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].Update(gameTime);          
+        }
 
         for (int i = 0; i < ropes.Count; i++)
         {
-
             ropes[i].ApplyForces();
-
-            for (int j = 0; j < ropes[i].points.Count; j++)
-            {
-                if (j == ropes[i].points.Count - 1) break;
-                DrawLine(_spriteBatch, ropes[i].points[j].position, ropes[i].points[j + 1].position, Color.White, 2f);
-            }
         }
 
-        for (int i = 0; i < entities.Count; i++)
-            {
-                entities[i].Update(gameTime);
-                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
-            }
+
 
         base.Update(gameTime);
     }
@@ -182,7 +178,20 @@ public class Game1 : Game
             DrawLine(_spriteBatch, shape[i].pointA.position, shape[i].pointB.position, Color.White, 2.5f);
         }
 
+        for (int i = 0; i < ropes.Count; i++)
+        {
 
+            for (int j = 0; j < ropes[i].points.Count; j++)
+            {
+                if (j == ropes[i].points.Count - 1) break;
+                DrawLine(_spriteBatch, ropes[i].points[j].position, ropes[i].points[j + 1].position, Color.White, 2f);
+            }
+        }
+
+        for (int i = 0; i < entities.Count; i++)
+        {
+            _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
+        }
 
 
         _spriteBatch.End();
