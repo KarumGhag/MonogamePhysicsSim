@@ -15,9 +15,9 @@ public class PhysicsObject : Entity
 {
     public Vector2 velocity;
 
-    public float gravity = 1;
+    public float gravity = 9;
 
-    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, float gravity = 1) : base(sprite, position, entities)
+    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, float gravity = 100) : base(sprite, position, entities)
     {
         this.gravity = gravity;
     }
