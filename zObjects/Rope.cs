@@ -24,10 +24,12 @@ public class Rope
     private int numPoints;
     private int pointMass;
     private Vector2 anchorPos;
+    float xConstrain;
+    float yConstrain;
     public Rope(int numPoints, int pointMass, Vector2 anchorPos, List<Rope> ropes)
     {
         ropes.Add(this);
-        
+
         this.numPoints = numPoints;
         this.pointMass = pointMass;
         this.anchorPos = anchorPos;
@@ -36,10 +38,21 @@ public class Rope
 
         for (int i = 0; i < numPoints; i++)
         {
-            points.Add(new PhysicsObject(Global._circle, anchorPos + new Vector2(i * 50, 0), Global.entities, pointMass, true));
+            points.Add(new PhysicsObject(Global._circle, this.anchorPos + new Vector2(i * 200, i * 50), Global.entities, this.pointMass, i == 0));
         }
 
+        xConstrain = 0;
+        yConstrain = 50;
 
     }
+
+    public void ApplyForces()
+    {
+        for (int i = 1; i < points.Count; i++)
+        {
+                   
+        }
+    }
+
 
 }

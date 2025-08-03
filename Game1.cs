@@ -166,6 +166,9 @@ public class Game1 : Game
 
         for (int i = 0; i < ropes.Count; i++)
         {
+
+            ropes[i].ApplyForces();
+
             for (int j = 0; j < ropes[i].points.Count; j++)
             {
                 if (j == ropes[i].points.Count - 1) break;

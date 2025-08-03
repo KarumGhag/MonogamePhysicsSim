@@ -19,7 +19,7 @@ public class PhysicsObject : Entity
     public Vector2 acceleration;
 
     public float fieldStrength { get; } = 650; // Pixels per second²
-    private bool stationary;
+    public bool stationary;
     public float mass;
 
     private Vector2 spawnPos;
