@@ -12,6 +12,7 @@ using SpringClass;
 using System;
 using System.Security.Authentication;
 using RopeClass;
+using Microsoft.Xna.Framework.Content;
 
 namespace MonogamePhysicsSim;
 
@@ -144,9 +145,15 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
+        
+        // updates global states
+        Global.mouseState = Mouse.GetState();
+        Global.gameTime = gameTime;
+        Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         for (int i = 0; i < entities.Count; i++)
         {
-            entities[i].Update(gameTime);          
+            entities[i].Update(gameTime);
         }
 
         for (int i = 0; i < ropes.Count; i++)
@@ -162,11 +169,6 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        // updates global states
-        Global.mouseState = Mouse.GetState();
-        Global.gameTime = gameTime;
-        Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
 
         _spriteBatch.Begin();
