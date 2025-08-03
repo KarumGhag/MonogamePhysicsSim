@@ -36,6 +36,7 @@ public class Game1 : Game
     public PhysicsObject point4;
     public PhysicsObject point5;
     public PhysicsObject point6;
+    public PhysicsObject point7;
 
 
     public Spring spring;
@@ -44,7 +45,7 @@ public class Game1 : Game
     public Spring spring4;
     public Spring spring5;
     public Spring spring6;
-
+    public Spring spring7;
 
     public List<Spring> shape;
 
@@ -99,22 +100,25 @@ public class Game1 : Game
 
 
         point1 = new PhysicsObject(_circle, _center + new Vector2(0, 0), entities, 1, true);
-        point2 = new PhysicsObject(_circle, _center + new Vector2(200, 0), entities, 1f, false);
+        point2 = new PhysicsObject(_circle, _center + new Vector2(200, 0), entities, 10f, false);
         point3 = new PhysicsObject(_circle, _center + new Vector2(300, -100), entities, 4f, false);
         point4 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, 1f, true);
         point5 = new PhysicsObject(_circle, _center + new Vector2(250, 0), entities, 2f);
         point6 = new PhysicsObject(_circle, _center + new Vector2(250, 0), entities, 1f);
+        point7 = new PhysicsObject(_circle, _center + new Vector2(200, 0), entities, 0.5f);
 
         point2.velocity = new Vector2(0, -100);
-        point3.velocity = new Vector2(1000, -200);
+        point3.velocity = new Vector2(0, -200);
         point6.velocity = new Vector2(0, 2000);
+        point7.velocity = new Vector2(200, -200);
 
-        spring = new Spring(point1, point2, 100f, 3f, 50f, shape);
+        spring = new Spring(point1, point2, 100f, 50f, 50f, shape);
         //spring2 = new Spring(point2, point3, 90f, 10f, 200f, shape);
-        spring3 = new Spring(point3, point4, 60f, 1f, 50f, shape);
-        spring4 = new Spring(point3, point5, 50f, 10f, 200f, shape);
+        spring3 = new Spring(point3, point7, 60f, 1f, 50f, shape);
+        spring4 = new Spring(point3, point5, 5f, 10f, 500f, shape);
         spring5 = new Spring(point4, point5, 50f, 10f, 200f, shape);
         spring6 = new Spring(point2, point6, 60f, 10f, 200f, shape);
+        spring7 = new Spring(point2, point7, 50f, 1f, 100f, shape);
 
 
     }
