@@ -21,10 +21,13 @@ public class VerletObject : Entity
 
     private Vector2 velocity;
 
-    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), bool stationary = false) : base(sprite, position, entities)
+    private float bounceDamping;
+
+    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), float bounceDamping = 0.5f, bool stationary = false) : base(sprite, position, entities)
     {
         oldPosition = position - startOffset;
         velocity = position - oldPosition;
+        this.bounceDamping = bounceDamping;
 
         verletObjects.Add(this);
     }
@@ -46,26 +49,27 @@ public class VerletObject : Entity
 
     private void EdgeCheck()
     {
+
         if (position.X > Global.width)
         {
             position.X = Global.width;
-            oldPosition.X = position.X + velocity.X;
+            oldPosition.X = position.X + velocity.X * bounceDamping;
         }
         else if (position.X < 0)
         {
             position.X = 0;
-            oldPosition.X = position.X + velocity.X;
+            oldPosition.X = position.X + velocity.X * bounceDamping;
         }
 
         if (position.Y > Global.height)
         {
             position.Y = Global.height;
-            oldPosition.Y = position.Y + velocity.Y;
+            oldPosition.Y = position.Y + velocity.Y * bounceDamping;
         }
         else if (position.Y < 0)
         {
             position.Y = 0;
-            oldPosition.Y = position.Y + velocity.Y;
+            oldPosition.Y = position.Y + velocity.Y * bounceDamping;
         }
 
     }
