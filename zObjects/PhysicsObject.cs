@@ -16,7 +16,7 @@ public class PhysicsObject : Entity
 {
     public Vector2 velocity;
 
-    public float gravity { get; set; } = 9;
+    public float gravity = 9;
 
     private bool stationary = false;
 

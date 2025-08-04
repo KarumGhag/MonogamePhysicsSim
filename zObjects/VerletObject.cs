@@ -16,9 +16,22 @@ public class VerletObject : Entity
 {
 
     private Vector2 oldPosition;
+    private Vector2 startOffset = new Vector2(5, 5);
+
+    private Vector2 velocity;
 
     public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, bool stationary = false) : base(sprite, position, entities)
     {
+        oldPosition = position - startOffset;
+        velocity = position - oldPosition;
+    }
+
+    public virtual void Update()
+    {
+        velocity = position - oldPosition;
+
+        position += velocity;
+
         oldPosition = position;
     }
 }

@@ -15,6 +15,10 @@ public static class Global
     public static MouseState mouseState;
     public static GameTime gameTime;
     public static float deltaTime;
+    public static Texture2D _circle;
+
+    public static int width;
+    public static int height;
 
     public static float GetVectorLen(Vector2 vector)
     {
@@ -22,7 +26,7 @@ public static class Global
         double yLen = Math.Pow(vector.Y, 2);
 
         return (float)Math.Sqrt(xLen + yLen);
-        
+
     }
 
 }

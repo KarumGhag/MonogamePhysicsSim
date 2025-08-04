@@ -82,6 +82,11 @@ public class Game1 : Game
         _circle = Content.Load<Texture2D>("circle");
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
+        
+        // Sets global variables
+        Global._circle = _circle;
+        Global.width = _screenWidth;
+        Global.height = _screenHeight;
 
         // Initalises the entity list
         entities = new List<Entity>();
