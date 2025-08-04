@@ -12,7 +12,13 @@ using System.Dynamic;
 
 namespace VerletClass;
 
-public class VerletObject
+public class VerletObject : Entity
 {
-    
+
+    private Vector2 oldPosition;
+
+    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, bool stationary = false) : base(sprite, position, entities)
+    {
+        oldPosition = position;
+    }
 }
