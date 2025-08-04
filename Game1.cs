@@ -40,6 +40,8 @@ public class Game1 : Game
 
     public List<Spring> shape;
 
+
+    public VerletObject verlet1;
     public List<VerletObject> verletObjects;
 
 
@@ -108,9 +110,7 @@ public class Game1 : Game
         spring = new Spring(point1, point2, 5f, 0.5f, 200f, shape);
         spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
 
-        shape.Add(spring);
-        shape.Add(spring2);
-
+        verlet1 = new VerletObject(_circle, _center - new Vector2(200, 200), entities, verletObjects, new Vector2(10, 10));
 
 
     }
@@ -129,6 +129,11 @@ public class Game1 : Game
         for (int i = 0; i < entities.Count; i++)
         {
             entities[i].Update(gameTime);
+        }
+
+        for (int i = 0; i < verletObjects.Count; i++)
+        {
+            verletObjects[i].Update();
         }
 
         base.Update(gameTime);
@@ -167,6 +172,7 @@ public class Game1 : Game
                 0f
             );
         }
+
 
 
         _spriteBatch.End();

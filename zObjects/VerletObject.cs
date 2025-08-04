@@ -9,6 +9,7 @@ using EntityClass;
 using GlobalInfo;
 using System.Threading;
 using System.Dynamic;
+using System;
 
 namespace VerletClass;
 
@@ -20,18 +21,53 @@ public class VerletObject : Entity
 
     private Vector2 velocity;
 
-    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, bool stationary = false) : base(sprite, position, entities)
+    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), bool stationary = false) : base(sprite, position, entities)
     {
         oldPosition = position - startOffset;
         velocity = position - oldPosition;
+
+        verletObjects.Add(this);
     }
 
     public virtual void Update()
     {
         velocity = position - oldPosition;
 
+        oldPosition = position;
+
         position += velocity;
 
-        oldPosition = position;
+
+        EdgeCheck();
+
+
     }
+
+
+    private void EdgeCheck()
+    {
+        if (position.X > Global.width)
+        {
+            position.X = Global.width;
+            oldPosition.X = position.X + velocity.X;
+        }
+        else if (position.X < 0)
+        {
+            position.X = 0;
+            oldPosition.X = position.X + velocity.X;
+        }
+
+        if (position.Y > Global.height)
+        {
+            position.Y = Global.height;
+            oldPosition.Y = position.Y + velocity.Y;
+        }
+        else if (position.Y < 0)
+        {
+            position.Y = 0;
+            oldPosition.Y = position.Y + velocity.Y;
+        }
+
+    }
+
 }
