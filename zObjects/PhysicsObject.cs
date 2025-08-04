@@ -18,11 +18,14 @@ public class PhysicsObject : Entity
     public Vector2 velocity;
     public Vector2 acceleration;
 
-    public float fieldStrength { get; } = 650; // Pixels per second²
+    public float fieldStrength { get; } = 10; // Pixels per second²
     public bool stationary;
     public float mass;
-
     private Vector2 spawnPos;
+
+
+    public Vector2 currentPosition;
+    public Vector2 previousPosition;
 
 
 
@@ -32,10 +35,13 @@ public class PhysicsObject : Entity
         this.stationary = stationary;
         this.mass = mass;
         spawnPos = position;
+
+        currentPosition = previousPosition = position;
     }
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
 
         KeyboardState keyboardState = Keyboard.GetState();
         if (keyboardState.IsKeyDown(Keys.Space))
@@ -43,30 +49,24 @@ public class PhysicsObject : Entity
             position = spawnPos;
         }
 
-        base.Update(gameTime);
 
-        // Apply gravity as constant acceleration (per second²)
-        ApplyAcceleration(new Vector2(0, fieldStrength));
+        ApplyForce(new Vector2(0, fieldStrength));
+
+        currentPosition = position;
 
         if (!stationary)
         {
-            velocity += acceleration * Global.deltaTime;
-            position += velocity * Global.deltaTime;
+            position += (currentPosition - previousPosition) + acceleration * deltaTime;
         }
 
-        // Reset acceleration at end of frame
+        previousPosition = position;
         acceleration = Vector2.Zero;
+
     }
 
     public void ApplyForce(Vector2 force)
     {
         acceleration += force / mass;
-    
-    }
-
-    public void ApplyAcceleration(Vector2 accel)
-    {
-        acceleration += accel;
     }
 }
 

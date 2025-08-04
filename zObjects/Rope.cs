@@ -50,7 +50,7 @@ public class Rope
     {
         for (int i = 1; i < points.Count; i++)
         {
-                   
+            
         }
     }
 

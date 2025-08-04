@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj": {}
+    "C:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj": {}
   },
   "projects": {
-    "c:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj": {
+    "C:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj",
+        "projectUniqueName": "C:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj",
         "projectName": "MonogamePhysicsSim",
-        "projectPath": "c:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj",
+        "projectPath": "C:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\MonogamePhysicsSim.csproj",
         "packagesPath": "C:\\Users\\karum\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\obj\\",
+        "outputPath": "C:\\Users\\karum\\Desktop\\0Vscode\\c#\\MonogamePhysicsSim\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\karum\\AppData\\Roaming\\NuGet\\NuGet.Config"
