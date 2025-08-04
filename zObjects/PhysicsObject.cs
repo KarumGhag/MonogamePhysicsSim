@@ -18,7 +18,7 @@ public class PhysicsObject : Entity
 
     public float gravity { get; set; } = 9;
 
-    private bool stationary { get; set; } = false;
+    private bool stationary = false;
 
     public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, bool stationary = false, float gravity = 100) : base(sprite, position, entities)
     {

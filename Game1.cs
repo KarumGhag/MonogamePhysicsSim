@@ -17,6 +17,7 @@ namespace MonogamePhysicsSim;
 public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
+    private Texture2D _pixel;
 
     private int _screenWidth = 1280;
     private int _screenHeight = 720;
@@ -40,11 +41,14 @@ public class Game1 : Game
 
 
 
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        IsFixedTimeStep = true;
     }
 
     protected override void Initialize()
@@ -76,6 +80,8 @@ public class Game1 : Game
 
         // Loads all textures
         _circle = Content.Load<Texture2D>("circle");
+        _pixel = new Texture2D(GraphicsDevice, 1, 1);
+        _pixel.SetData(new[] { Color.White });
 
         // Initalises the entity list
         entities = new List<Entity>();
@@ -94,9 +100,9 @@ public class Game1 : Game
         spring2 = new Spring(point2, point3, (float)5, (float)0.5, 100);
 
         shape.Add(spring);
-        shape.Add(spring2);        
-        
-        
+        shape.Add(spring2);
+
+
 
     }
 
@@ -106,6 +112,15 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
+        for (int i = 0; i < shape.Count; i++)
+        {
+            shape[i].ApplyForce();
+        }
+
+        for (int i = 0; i < entities.Count; i++)
+        {
+            entities[i].Update(gameTime);
+        }
 
         base.Update(gameTime);
     }
@@ -125,16 +140,23 @@ public class Game1 : Game
         // Loops over all _entites updates then draws them
         for (int i = 0; i < shape.Count; i++)
         {
-            shape[i].ApplyForce();
+            DrawLine(_spriteBatch, shape[i].point1.position, shape[i].point2.position, Color.White, 2.5f);
         }
 
-        Console.WriteLine(_center.X < point1.position.X);
-        
-        
+
         for (int i = 0; i < entities.Count; i++)
         {
-            entities[i].Update(gameTime);
-            _spriteBatch.Draw(entities[i].sprite, entities[i].position, Color.White);
+            _spriteBatch.Draw(
+                entities[i].sprite,
+                entities[i].position,
+                null,
+                Color.White,
+                0f,
+                new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f),
+                1f,
+                SpriteEffects.None,
+                0f
+            );
         }
 
 
@@ -143,4 +165,15 @@ public class Game1 : Game
         // Cleans the screen
         base.Draw(gameTime);
     }
+        
+    public void DrawLine(SpriteBatch spriteBatch, Vector2 pointA, Vector2 pointB, Color color, float thickness = 1f)
+    {
+        Vector2 delta = pointB - pointA;
+        float length = delta.Length();
+        float angle = (float)Math.Atan2(delta.Y, delta.X);
+
+        spriteBatch.Draw(_pixel, pointA, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
+    }
+
+
 }
