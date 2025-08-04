@@ -3,13 +3,14 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 using EntityClass;
 using PhysicsClass;
 using GlobalInfo;
 using FollowClass;
 using SpringClass;
-using System;
+using VerletClass;
 
 namespace MonogamePhysicsSim;
 
@@ -38,6 +39,8 @@ public class Game1 : Game
     public Spring spring2;
 
     public List<Spring> shape;
+
+    public List<VerletObject> verletObjects;
 
 
 
@@ -91,6 +94,7 @@ public class Game1 : Game
         // Initalises the entity list
         entities = new List<Entity>();
         shape = new List<Spring>();
+        verletObjects = new List<VerletObject>();
 
 
         // Instantiates objects
@@ -101,8 +105,8 @@ public class Game1 : Game
         point2 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, false, 100);
         point3 = new PhysicsObject(_circle, _center + new Vector2(500, 100), entities, false, 200);
 
-        spring = new Spring(point1, point2, (float)5, (float)0.5, 200);
-        spring2 = new Spring(point2, point3, (float)5, (float)0.5, 100);
+        spring = new Spring(point1, point2, 5f, 0.5f, 200f, shape);
+        spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
 
         shape.Add(spring);
         shape.Add(spring2);
