@@ -23,6 +23,9 @@ public class VerletObject : Entity
 
     private float bounceDamping;
 
+    public float gravity = 0.3f;
+    public float firction = 0.999f;
+
     public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), float bounceDamping = 0.5f, bool stationary = false) : base(sprite, position, entities)
     {
         oldPosition = position - startOffset;
@@ -34,12 +37,12 @@ public class VerletObject : Entity
 
     public virtual void Update()
     {
-        velocity = position - oldPosition;
+        velocity = (position - oldPosition) * firction;
 
         oldPosition = position;
 
         position += velocity;
-
+        position.Y += gravity;
 
         EdgeCheck();
 
