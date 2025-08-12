@@ -17,7 +17,6 @@ public class VerletObject : Entity
 {
 
     private Vector2 oldPosition;
-    private Vector2 startOffset = new Vector2(5, 5);
     private Vector2 velocity;
 
     private float bounceDamping;
@@ -52,7 +51,6 @@ public class VerletObject : Entity
         }
 
 
-
         EdgeCheck();
 
 
@@ -72,6 +70,7 @@ public class VerletObject : Entity
             position.X = 0;
             oldPosition.X = position.X + velocity.X * bounceDamping;
         }
+
 
         if (position.Y > Global.height)
         {

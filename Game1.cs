@@ -40,20 +40,7 @@ public class Game1 : Game
     public Spring spring2;
 
     public List<Spring> shape;
-
-    public VerletObject verlet1;
-    public VerletObject verlet2;
-    public VerletObject verlet3;
-    public VerletObject verlet4;
-    public VerletObject verlet5;
-    public VerletObject verlet6;
     public List<VerletObject> verletObjects;
-
-    public Rope verletRope1;
-    public Rope verletRope2;
-    public Rope verletRope3;
-    public Rope verletRope4;
-    public Rope verletRope5;
     public List<Rope> ropes;
 
 
@@ -124,21 +111,7 @@ public class Game1 : Game
         spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
         */
 
-        verlet1 = new VerletObject(_circle, _center - new Vector2(0, 100), entities, verletObjects, new Vector2(0, 0), true);
-        verlet2 = new VerletObject(_circle, _center - new Vector2(0, 130), entities, verletObjects, new Vector2(0, 0));
-        verlet3 = new VerletObject(_circle, _center - new Vector2(0, 160), entities, verletObjects, new Vector2(0, 0));
-        verlet4 = new VerletObject(_circle, _center - new Vector2(0, 180), entities, verletObjects, new Vector2(0, 0));
-        verlet5 = new VerletObject(_circle, _center - new Vector2(0, 210), entities, verletObjects, new Vector2(0, 0));
-        verlet6 = new VerletObject(_circle, _center - new Vector2(0, 240), entities, verletObjects, new Vector2(20, 20));
-
-        
-
-
-        verletRope1 = new Rope(verlet1, verlet2, 30, ropes);
-        verletRope2 = new Rope(verlet2, verlet3, 30, ropes);
-        verletRope3 = new Rope(verlet3, verlet4, 30, ropes);
-        verletRope4 = new Rope(verlet4, verlet5, 30, ropes);
-        verletRope5 = new Rope(verlet5, verlet6, 30, ropes);
+        generateRope(10, new Vector2(200, 0), 30);
 
 
     }
@@ -192,24 +165,15 @@ public class Game1 : Game
 
         for (int i = 0; i < ropes.Count; i++)
         {
-            DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 2.5f);   
+            DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 2.5f);
         }
 
 
         for (int i = 0; i < entities.Count; i++)
-            {
-                _spriteBatch.Draw(
-                    entities[i].sprite,
-                    entities[i].position,
-                    null,
-                    Color.White,
-                    0f,
-                    new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f),
-                    1f,
-                    SpriteEffects.None,
-                    0f
-                );
-            }
+        {
+            _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
+
+        }
 
 
 
@@ -218,7 +182,7 @@ public class Game1 : Game
         // Cleans the screen
         base.Draw(gameTime);
     }
-        
+
     public void DrawLine(SpriteBatch spriteBatch, Vector2 pointA, Vector2 pointB, Color color, float thickness = 1f)
     {
         Vector2 delta = pointB - pointA;
@@ -228,5 +192,33 @@ public class Game1 : Game
         spriteBatch.Draw(_pixel, pointA, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
     }
 
+
+    public List<Rope> generatedRope;
+    void generateRope(int numPoint, Vector2 anchorPos, float distance)
+    {
+
+        List<VerletObject> generatedPoints = new List<VerletObject>();
+        generatedRope = new List<Rope>();
+
+        VerletObject anchor = new VerletObject(_circle, anchorPos, entities, verletObjects, new Vector2(0, 0), true);
+
+        generatedPoints.Add(anchor);
+
+        VerletObject point1;
+        VerletObject point2;
+
+        Vector2 lastPointPos = anchorPos;
+
+
+        for (int i = 0; i < numPoint; i++)
+        {
+            point1 = new VerletObject(_circle, lastPointPos + new Vector2(distance, distance), entities, verletObjects);
+            lastPointPos += new Vector2(distance, distance);
+
+            generatedPoints.Add(point1);
+            generatedRope.Add(new Rope(generatedPoints[i], generatedPoints[i + 1], distance, ropes));
+        }
+
+    }
 
 }
