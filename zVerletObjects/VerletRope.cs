@@ -27,11 +27,13 @@ public class Rope
     private Vector2 midPoint;
 
 
-    public Rope(VerletObject point1, VerletObject point2, float restLen)
+    public Rope(VerletObject point1, VerletObject point2, float restLen, List<Rope> ropes)
     {
         this.point1 = point1;
         this.point2 = point2;
         this.restLen = restLen;
+
+        ropes.Add(this);
     }
 
 

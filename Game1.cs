@@ -49,6 +49,9 @@ public class Game1 : Game
     public List<VerletObject> verletObjects;
 
     public Rope verletRope1;
+    public Rope verletRope2;
+    public Rope verletRope3;
+    public Rope verletRope4;
     public List<Rope> ropes;
 
 
@@ -107,6 +110,7 @@ public class Game1 : Game
 
 
         // Instantiates objects
+
         //_player = new FollowObject(_circle, _center, entities);
 
 
@@ -118,11 +122,17 @@ public class Game1 : Game
         spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
 
         verlet1 = new VerletObject(_circle, _center - new Vector2(200, 300), entities, verletObjects, new Vector2(0, 0), 0.5f, true);
-        verlet2 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(50000, -1000));
+        verlet2 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
+        verlet3 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
+        verlet4 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
+        verlet5 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
 
-        verletRope1 = new Rope(verlet1, verlet2, 30);
 
-        ropes.Add(verletRope1);
+        verletRope1 = new Rope(verlet1, verlet2, 30, ropes);
+        verletRope2 = new Rope(verlet2, verlet3, 30, ropes);
+        verletRope3 = new Rope(verlet3, verlet4, 30, ropes);
+        verletRope4 = new Rope(verlet4, verlet5, 30, ropes);
+
 
     }
 
