@@ -11,6 +11,7 @@ using GlobalInfo;
 using FollowClass;
 using SpringClass;
 using VerletClass;
+using VerletRope;
 
 namespace MonogamePhysicsSim;
 
@@ -40,10 +41,15 @@ public class Game1 : Game
 
     public List<Spring> shape;
 
-
     public VerletObject verlet1;
+    public VerletObject verlet2;
+    public VerletObject verlet3;
+    public VerletObject verlet4;
+    public VerletObject verlet5;
     public List<VerletObject> verletObjects;
 
+    public Rope verletRope1;
+    public List<Rope> ropes;
 
 
 
@@ -87,7 +93,7 @@ public class Game1 : Game
         _circle = Content.Load<Texture2D>("circle");
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
-        
+
         // Sets global variables
         Global._circle = _circle;
         Global.width = _screenWidth;
@@ -97,6 +103,7 @@ public class Game1 : Game
         entities = new List<Entity>();
         shape = new List<Spring>();
         verletObjects = new List<VerletObject>();
+        ropes = new List<Rope>();
 
 
         // Instantiates objects
@@ -110,8 +117,12 @@ public class Game1 : Game
         spring = new Spring(point1, point2, 5f, 0.5f, 200f, shape);
         spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
 
-        verlet1 = new VerletObject(_circle, _center - new Vector2(200, 200), entities, verletObjects, new Vector2(10, 10));
+        verlet1 = new VerletObject(_circle, _center - new Vector2(200, 300), entities, verletObjects, new Vector2(0, 0), 0.5f, true);
+        verlet2 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(50000, -1000));
 
+        verletRope1 = new Rope(verlet1, verlet2, 30);
+
+        ropes.Add(verletRope1);
 
     }
 
@@ -134,6 +145,11 @@ public class Game1 : Game
         for (int i = 0; i < verletObjects.Count; i++)
         {
             verletObjects[i].Update();
+        }
+
+        for (int i = 0; i < ropes.Count; i++)
+        {
+            ropes[i].ConstrainPoints();
         }
 
         base.Update(gameTime);

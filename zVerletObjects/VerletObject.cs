@@ -24,25 +24,35 @@ public class VerletObject : Entity
     private float bounceDamping;
 
     public float gravity = 0.3f;
-    public float firction = 0.999f;
+    public float firction = 0.9999999999f;
+
+    public bool stationary = false;
 
     public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), float bounceDamping = 0.5f, bool stationary = false) : base(sprite, position, entities)
     {
         oldPosition = position - startOffset;
         velocity = position - oldPosition;
+
         this.bounceDamping = bounceDamping;
+        this.stationary = stationary;
 
         verletObjects.Add(this);
     }
 
     public virtual void Update()
     {
-        velocity = (position - oldPosition) * firction;
 
-        oldPosition = position;
+        if (!stationary)
+        {
+            velocity = (position - oldPosition) * firction;
 
-        position += velocity;
-        position.Y += gravity;
+            oldPosition = position;
+
+            position += velocity;
+            position.Y += gravity;            
+        }
+
+
 
         EdgeCheck();
 
