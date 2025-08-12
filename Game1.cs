@@ -111,7 +111,7 @@ public class Game1 : Game
         spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
         */
 
-        generateRope(10, new Vector2(200, 0), 30);
+        generateRope(30, new Vector2(_screenWidth / 2, -_screenHeight), 20);
 
 
     }
