@@ -17,13 +17,10 @@ namespace VerletRope;
 
 public class Rope
 {
-    private VerletObject point1;
-
-    private VerletObject point2;
+    public VerletObject point1;
+    public VerletObject point2;
     private float restLen;
     private Vector2 distanceVec;
-    private float distance;
-    private float offset;
     private Vector2 midPoint;
 
 
@@ -59,7 +56,6 @@ public class Rope
         Vector2 correctedPos2;
 
         float currentAngle = getCurrentAngle();
-
         float adjacent = (float)Math.Cos(currentAngle) * (restLen / 2);
         float opposite = (float)Math.Sin(currentAngle) * (restLen / 2);
 
@@ -77,7 +73,6 @@ public class Rope
     public void ConstrainPoints()
     {
         distanceVec = point1.position - point2.position;
-        distance = Global.GetVectorLen(distanceVec);
 
         Vector2 desiredPoint1 = getCorrectedPos()[0];
         Vector2 desiredPoint2 = getCorrectedPos()[1];

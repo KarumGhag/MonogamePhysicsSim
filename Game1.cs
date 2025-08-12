@@ -46,12 +46,14 @@ public class Game1 : Game
     public VerletObject verlet3;
     public VerletObject verlet4;
     public VerletObject verlet5;
+    public VerletObject verlet6;
     public List<VerletObject> verletObjects;
 
     public Rope verletRope1;
     public Rope verletRope2;
     public Rope verletRope3;
     public Rope verletRope4;
+    public Rope verletRope5;
     public List<Rope> ropes;
 
 
@@ -113,25 +115,30 @@ public class Game1 : Game
 
         //_player = new FollowObject(_circle, _center, entities);
 
-
+        /*
         point1 = new PhysicsObject(_circle, _center - new Vector2(0, 0), entities, true, 0);
-        point2 = new PhysicsObject(_circle, _center + new Vector2(500, 0), entities, false, 100);
-        point3 = new PhysicsObject(_circle, _center + new Vector2(500, 100), entities, false, 200);
+        point2 = new PhysicsObject(_circle, _center + new Vector2(300, 0), entities, false, 100);
+        point3 = new PhysicsObject(_circle, _center + new Vector2(300, 100), entities, false, 200);
 
         spring = new Spring(point1, point2, 5f, 0.5f, 200f, shape);
         spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
+        */
 
-        verlet1 = new VerletObject(_circle, _center - new Vector2(200, 300), entities, verletObjects, new Vector2(0, 0), 0.5f, true);
-        verlet2 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
-        verlet3 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
-        verlet4 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
-        verlet5 = new VerletObject(_circle, _center - new Vector2(200, 100), entities, verletObjects, new Vector2(0, 0));
+        verlet1 = new VerletObject(_circle, _center - new Vector2(0, 100), entities, verletObjects, new Vector2(0, 0), true);
+        verlet2 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
+        verlet3 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
+        verlet4 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
+        verlet5 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
+        verlet6 = new VerletObject(_circle, _center - new Vector2(-200, 100), entities, verletObjects, new Vector2(0, 0));
+
+        
 
 
         verletRope1 = new Rope(verlet1, verlet2, 30, ropes);
         verletRope2 = new Rope(verlet2, verlet3, 30, ropes);
         verletRope3 = new Rope(verlet3, verlet4, 30, ropes);
         verletRope4 = new Rope(verlet4, verlet5, 30, ropes);
+        verletRope5 = new Rope(verlet5, verlet6, 30, ropes);
 
 
     }
@@ -183,21 +190,26 @@ public class Game1 : Game
             DrawLine(_spriteBatch, shape[i].point1.position, shape[i].point2.position, Color.White, 2.5f);
         }
 
+        for (int i = 0; i < ropes.Count; i++)
+        {
+            DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 2.5f);   
+        }
+
 
         for (int i = 0; i < entities.Count; i++)
-        {
-            _spriteBatch.Draw(
-                entities[i].sprite,
-                entities[i].position,
-                null,
-                Color.White,
-                0f,
-                new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f),
-                1f,
-                SpriteEffects.None,
-                0f
-            );
-        }
+            {
+                _spriteBatch.Draw(
+                    entities[i].sprite,
+                    entities[i].position,
+                    null,
+                    Color.White,
+                    0f,
+                    new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f),
+                    1f,
+                    SpriteEffects.None,
+                    0f
+                );
+            }
 
 
 
