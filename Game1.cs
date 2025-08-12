@@ -205,8 +205,7 @@ public class Game1 : Game
         generatedPoints.Add(anchor);
 
         VerletObject point1;
-        VerletObject point2;
-
+        
         Vector2 lastPointPos = anchorPos;
 
 
