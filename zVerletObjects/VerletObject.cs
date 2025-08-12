@@ -18,19 +18,18 @@ public class VerletObject : Entity
 
     private Vector2 oldPosition;
     private Vector2 startOffset = new Vector2(5, 5);
-
     private Vector2 velocity;
 
     private float bounceDamping;
 
-    public float gravity = 0.3f;
+    private float gravity = 0.3f;
     public float firction = 0.9999999999f;
 
     public bool stationary = false;
 
     public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), bool stationary = false, float bounceDamping = 0.5f) : base(sprite, position, entities)
     {
-        oldPosition = position - startOffset;
+        oldPosition = position - startVelocity;
         velocity = position - oldPosition;
 
         this.bounceDamping = bounceDamping;

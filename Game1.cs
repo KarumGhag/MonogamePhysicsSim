@@ -125,11 +125,11 @@ public class Game1 : Game
         */
 
         verlet1 = new VerletObject(_circle, _center - new Vector2(0, 100), entities, verletObjects, new Vector2(0, 0), true);
-        verlet2 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
-        verlet3 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
-        verlet4 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
-        verlet5 = new VerletObject(_circle, _center - new Vector2(0, 200), entities, verletObjects, new Vector2(0, 0));
-        verlet6 = new VerletObject(_circle, _center - new Vector2(-200, 100), entities, verletObjects, new Vector2(0, 0));
+        verlet2 = new VerletObject(_circle, _center - new Vector2(0, 130), entities, verletObjects, new Vector2(0, 0));
+        verlet3 = new VerletObject(_circle, _center - new Vector2(0, 160), entities, verletObjects, new Vector2(0, 0));
+        verlet4 = new VerletObject(_circle, _center - new Vector2(0, 180), entities, verletObjects, new Vector2(0, 0));
+        verlet5 = new VerletObject(_circle, _center - new Vector2(0, 210), entities, verletObjects, new Vector2(0, 0));
+        verlet6 = new VerletObject(_circle, _center - new Vector2(0, 240), entities, verletObjects, new Vector2(20, 20));
 
         
 
