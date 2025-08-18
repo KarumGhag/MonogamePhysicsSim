@@ -12,6 +12,8 @@ using FollowClass;
 using SpringClass;
 using VerletClass;
 using VerletRope;
+using Simulation;
+using RopeSimulation;
 
 namespace MonogamePhysicsSim;
 
@@ -24,26 +26,15 @@ public class Game1 : Game
     private int _screenWidth = 1280;
     private int _screenHeight = 720;
 
-    private SpriteBatch _spriteBatch;
+    public SpriteBatch _spriteBatch;
 
     private Texture2D _circle;
     private Vector2 _center;
 
 
-    public List<Entity> entities;
-    public Entity _player;
+    public SimulationClass currentSimulation;
 
-    public PhysicsObject point1;
-    public PhysicsObject point2;
-    public PhysicsObject point3;
-    public Spring spring;
-    public Spring spring2;
-
-    public List<Spring> shape;
-    public List<VerletObject> verletObjects;
-    public List<Rope> ropes;
-
-
+    private RopeSim ropeSim;
 
     public Game1()
     {
@@ -91,27 +82,10 @@ public class Game1 : Game
         Global.width = _screenWidth;
         Global.height = _screenHeight;
 
-        // Initalises the entity list
-        entities = new List<Entity>();
-        shape = new List<Spring>();
-        verletObjects = new List<VerletObject>();
-        ropes = new List<Rope>();
+        // Instantiates simulations
+        ropeSim = new RopeSim(this);
 
-
-        // Instantiates objects
-
-        //_player = new FollowObject(_circle, _center, entities);
-
-        /*
-        point1 = new PhysicsObject(_circle, _center - new Vector2(0, 0), entities, true, 0);
-        point2 = new PhysicsObject(_circle, _center + new Vector2(300, 0), entities, false, 100);
-        point3 = new PhysicsObject(_circle, _center + new Vector2(300, 100), entities, false, 200);
-
-        spring = new Spring(point1, point2, 5f, 0.5f, 200f, shape);
-        spring2 = new Spring(point2, point3, 5f, 0.5f, 100f, shape);
-        */
-
-        generateRope(30, new Vector2(_screenWidth / 2, -_screenHeight), 20);
+        currentSimulation = ropeSim;
 
 
     }
@@ -122,25 +96,13 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
-        for (int i = 0; i < shape.Count; i++)
-        {
-            shape[i].ApplyForce();
-        }
+        // updates global states
+        Global.mouseState = Mouse.GetState();
+        Global.gameTime = gameTime;
+        Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        for (int i = 0; i < entities.Count; i++)
-        {
-            entities[i].Update(gameTime);
-        }
-
-        for (int i = 0; i < verletObjects.Count; i++)
-        {
-            verletObjects[i].Update();
-        }
-
-        for (int i = 0; i < ropes.Count; i++)
-        {
-            ropes[i].ConstrainPoints();
-        }
+        // Updates the currently in use simulation
+        currentSimulation.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -149,35 +111,8 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // updates global states
-        Global.mouseState = Mouse.GetState();
-        Global.gameTime = gameTime;
-        Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-
-        _spriteBatch.Begin();
-
-        // Loops over all _entites updates then draws them
-        for (int i = 0; i < shape.Count; i++)
-        {
-            DrawLine(_spriteBatch, shape[i].point1.position, shape[i].point2.position, Color.White, 2.5f);
-        }
-
-        for (int i = 0; i < ropes.Count; i++)
-        {
-            DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 2.5f);
-        }
-
-
-        for (int i = 0; i < entities.Count; i++)
-        {
-            _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
-
-        }
-
-
-
-        _spriteBatch.End();
+        // Draws the currently in use simulation
+        currentSimulation.Draw(gameTime);
 
         // Cleans the screen
         base.Draw(gameTime);
@@ -190,34 +125,6 @@ public class Game1 : Game
         float angle = (float)Math.Atan2(delta.Y, delta.X);
 
         spriteBatch.Draw(_pixel, pointA, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0f);
-    }
-
-
-    public List<Rope> generatedRope;
-    void generateRope(int numPoint, Vector2 anchorPos, float distance)
-    {
-
-        List<VerletObject> generatedPoints = new List<VerletObject>();
-        generatedRope = new List<Rope>();
-
-        VerletObject anchor = new VerletObject(_circle, anchorPos, entities, verletObjects, new Vector2(0, 0), true);
-
-        generatedPoints.Add(anchor);
-
-        VerletObject point1;
-        
-        Vector2 lastPointPos = anchorPos;
-
-
-        for (int i = 0; i < numPoint; i++)
-        {
-            point1 = new VerletObject(_circle, lastPointPos + new Vector2(distance, distance), entities, verletObjects);
-            lastPointPos += new Vector2(distance, distance);
-
-            generatedPoints.Add(point1);
-            generatedRope.Add(new Rope(generatedPoints[i], generatedPoints[i + 1], distance, ropes));
-        }
-
     }
 
 }

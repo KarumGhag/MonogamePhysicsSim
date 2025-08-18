@@ -19,6 +19,7 @@ public static class Global
 
     public static int width;
     public static int height;
+
     public static float GetVectorLen(Vector2 vector)
     {
         double xLen = Math.Pow(vector.X, 2);
