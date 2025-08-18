@@ -23,8 +23,8 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private Texture2D _pixel;
 
-    private int _screenWidth = 1280;
-    private int _screenHeight = 720;
+    private int _screenWidth = 1920;
+    private int _screenHeight = 1080;
 
     public SpriteBatch _spriteBatch;
 
