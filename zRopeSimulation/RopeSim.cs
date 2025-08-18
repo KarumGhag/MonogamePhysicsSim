@@ -14,6 +14,7 @@ using VerletClass;
 using VerletRope;
 using MonogamePhysicsSim;
 using Simulation;
+using System.Text;
 
 namespace RopeSimulation;
 
@@ -24,12 +25,10 @@ public class RopeSim : SimulationClass
     public List<VerletObject> verletObjects = new List<VerletObject>();
     public List<Rope> ropes = new List<Rope>();
 
-
+    private bool drawPoints = false;
     public RopeSim(Game1 game1) : base(game1)
     {
         generateRope(30, new Vector2(_screenWidth / 2, -_screenHeight), 15);
-
-
     }
 
     public override void Update(GameTime gameTime)
@@ -56,6 +55,7 @@ public class RopeSim : SimulationClass
         for (int i = 0; i < ropes.Count; i++)
         {
             ropes[i].ConstrainPoints();
+
         }
 
 
@@ -75,6 +75,12 @@ public class RopeSim : SimulationClass
         if (newKbState.IsKeyDown(Keys.D) && !oldKbState.IsKeyDown(Keys.D))
         {
             addRope();
+        }
+
+        // Toggle drawing of points
+        if (newKbState.IsKeyDown(Keys.W) && !oldKbState.IsKeyDown(Keys.W))
+        {
+            drawPoints = !drawPoints;
         }
 
 
@@ -100,10 +106,13 @@ public class RopeSim : SimulationClass
             game1.DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 5f);
         }
 
-
-        for (int i = 0; i < entities.Count; i++)
+        if (drawPoints)
         {
-            // _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
+            }
 
         }
 
@@ -143,6 +152,7 @@ public class RopeSim : SimulationClass
     private void resetRope()
     {
         ropes = new List<Rope>();
+        entities = new List<Entity>();
     }
 
     private void addRope()
