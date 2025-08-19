@@ -22,7 +22,7 @@ public class VerletObject : Entity
     private float bounceDamping;
 
     private float gravity = 0.3f;
-    public float firction = 0.99f;
+    public float firction = 1f;
 
     public bool stationary = false;
 

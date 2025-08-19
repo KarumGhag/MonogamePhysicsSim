@@ -15,6 +15,8 @@ using VerletRope;
 using MonogamePhysicsSim;
 using Simulation;
 using System.Text;
+using Microsoft.Xna.Framework.Audio;
+using System.Threading;
 
 namespace RopeSimulation;
 
@@ -28,7 +30,7 @@ public class RopeSim : SimulationClass
     private bool drawPoints = false;
     public RopeSim(Game1 game1) : base(game1)
     {
-        generateRope(30, new Vector2(_screenWidth / 2, -_screenHeight), 15);
+        addRope();
     }
 
     public override void Update(GameTime gameTime)
@@ -83,8 +85,16 @@ public class RopeSim : SimulationClass
             drawPoints = !drawPoints;
         }
 
+        // Generate lattice
+        if (newKbState.IsKeyDown(Keys.S) && !oldKbState.IsKeyDown(Keys.S))
+        {
+            generateSheet(20, new Vector2(_screenWidth / 2, -_screenHeight), 20, 5, 150);
+        }
+
 
         oldKbState = newKbState;
+
+       // generateLattice();
 
     }
 
@@ -120,12 +130,12 @@ public class RopeSim : SimulationClass
     }
 
 
-    private void generateRope(int numPoint, Vector2 anchorPos, float distance)
+    private void generateRope(int numPoint, Vector2 anchorPos, float distance, bool anchorStationary = true)
     {
         List<Rope> generatedRope = new List<Rope>();
         List<VerletObject> generatedPoints = new List<VerletObject>();
 
-        VerletObject anchor = new VerletObject(Global._circle, anchorPos, entities, verletObjects, new Vector2(0, 0), true);
+        VerletObject anchor = new VerletObject(Global._circle, anchorPos, entities, verletObjects, new Vector2(0, 0), anchorStationary);
 
         generatedPoints.Add(anchor);
 
@@ -141,9 +151,63 @@ public class RopeSim : SimulationClass
 
             generatedPoints.Add(point);
             generatedRope.Add(new Rope(generatedPoints[i], generatedPoints[i + 1], distance, ropes));
+
         }
 
         //generatedPoints[numPoint].position += new Vector2(500, 0);
+
+
+    }
+
+
+
+    private void generateSheet(int numPoint, Vector2 anchorPos, float distance, int numRope, float sheetDistance, bool anchorStationary = true)
+    {
+        List<Rope> sheetRopes = new List<Rope>();
+        List<List<VerletObject>> allPoints = new List<List<VerletObject>>();
+
+        List<VerletObject> currentPoints = new List<VerletObject>();
+
+        Vector2 nextPointPos;
+
+
+        for (int j = 0; j < numRope; j++)
+        {
+            
+            nextPointPos = anchorPos;
+            currentPoints = new List<VerletObject>();
+            // Generate points
+            for (int i = 0; i < numPoint; i++)
+            {
+                if (i == 0 && j == 0) // First point is anchor
+                {
+                    currentPoints.Add(new VerletObject(Global._circle, anchorPos, entities, verletObjects, new Vector2(0, 0), true));
+                    continue;
+                }
+
+                nextPointPos += new Vector2(distance * 1.5f, distance * 1.5f);
+                currentPoints.Add(new VerletObject(Global._circle, nextPointPos, entities, verletObjects));
+
+
+            }
+            allPoints.Add(currentPoints);
+            // Makes ropes between each point just generated
+            for (int i = 1; i < numPoint; i++)
+            {
+                sheetRopes.Add(new Rope(currentPoints[i - 1], currentPoints[i], distance, ropes));
+            }
+        }
+
+
+
+        for (int i = 0; i < numRope - 1; i++)
+        {
+            for (int j = 0; j < numPoint; j++)
+            {
+                sheetRopes.Add(new Rope(allPoints[i][j], allPoints[i + 1][j], sheetDistance, ropes));
+            }
+        }
+
 
 
     }
@@ -157,7 +221,7 @@ public class RopeSim : SimulationClass
 
     private void addRope()
     {
-        generateRope(30, new Vector2(_screenWidth / 2, -_screenHeight), 15);
+        generateRope(50, new Vector2(_screenWidth / 2, -_screenHeight), 15);
     }
 
 
