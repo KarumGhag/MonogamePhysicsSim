@@ -76,8 +76,15 @@ class RopeEditor
         if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) currentRope = GetNextRope();
 
         if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) CutRope();
+        if (newKbState.IsKeyDown(Keys.G) && !oldKbState.IsKeyDown(Keys.G)) points[currentSelected].stationary = !points[currentSelected].stationary;
 
+        for (int i = 0; i < points.Count; i++)
+        {
+            if (points[i].stationary) points[i].colour = Global.stationaryPointColour;
+            else points[i].colour = Global.defaultPointColour;
+        }
 
+        points[currentSelected].colour = Global.editingPointColour;
 
         points[currentSelected].renderBall = true;
         if (ropes[currentRope].active) ropes[currentRope].colour = Color.Red;
@@ -87,6 +94,8 @@ class RopeEditor
             else if (!ropes[i].active) ropes[i].colour = Global.backgroundColour;
             else if (i != currentRope) ropes[i].colour = Global.selectedRopeColour;
         }
+
+
 
 
         oldKbState = Keyboard.GetState();
@@ -104,6 +113,14 @@ class RopeEditor
             if (ropes[i].active) ropes[i].colour = Global.defaultRopeColour;
             else ropes[i].colour = Global.backgroundColour;
         }
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            if (points[i].stationary) points[i].colour = Global.stationaryPointColour;
+            else points[i].colour = Global.defaultPointColour;
+        }
+
+
     }
 
     // Cycles forwards through the points list
