@@ -26,6 +26,8 @@ namespace RopeSimulation;
 
 public class RopeSim : SimulationClass
 {
+
+    private bool pauseMotion = false;
     public List<Entity> entities = new List<Entity>();
     public List<Spring> springs = new List<Spring>();
     public List<VerletObject> verletObjects = new List<VerletObject>();
@@ -40,6 +42,7 @@ public class RopeSim : SimulationClass
 
     private List<ClothEditor> clothEditors = new List<ClothEditor>();
     private bool editingCloth = false;
+    private int currentClothEditor = 0;
 
     public RopeSim(Game1 game1) : base(game1)
     {
@@ -51,16 +54,128 @@ public class RopeSim : SimulationClass
 
         base.Update(gameTime);
 
+        if (!pauseMotion)
+        {
+            for (int i = 0; i < springs.Count; i++) springs[i].ApplyForce();
 
-        for (int i = 0; i < springs.Count; i++) springs[i].ApplyForce();
+            for (int i = 0; i < entities.Count; i++) entities[i].Update(gameTime);
 
-        for (int i = 0; i < entities.Count; i++) entities[i].Update(gameTime);
+            for (int i = 0; i < verletObjects.Count; i++) verletObjects[i].Update();
 
-        for (int i = 0; i < verletObjects.Count; i++) verletObjects[i].Update();
+            for (int i = 0; i < ropes.Count; i++) ropes[i].ConstrainPoints();
+        }
 
-        for (int i = 0; i < ropes.Count; i++) ropes[i].ConstrainPoints();
 
 
+        if (newKbState.IsKeyDown(Keys.R) && !oldKbState.IsKeyDown(Keys.R) && ropeEditors.Count > 0)
+        {
+            if (editingRope) ropeEditors[currentRopeEditor].isSelected = false;
+            ropeEditors[currentRopeEditor].Update();
+
+            editingRope = !editingRope;
+
+            if (editingRope)
+            {
+                editingCloth = false;
+                for (int i = 0; i < clothEditors.Count; i++)
+                {
+                    clothEditors[i].isSelected = false;
+                    clothEditors[i].Update();
+                }
+            }
+        }
+
+        if (newKbState.IsKeyDown(Keys.T) && !oldKbState.IsKeyDown(Keys.T) && clothEditors.Count > 0)
+        {
+
+            if (editingCloth) clothEditors[currentClothEditor].isSelected = false;
+            clothEditors[currentClothEditor].Update();
+
+            editingCloth = !editingCloth;
+
+            if (editingCloth)
+            {
+                editingRope = false;
+                for (int i = 0; i < ropeEditors.Count; i++)
+                {
+                    ropeEditors[i].isSelected = false;
+                    ropeEditors[i].Update();
+                }
+            }
+        }
+
+
+        if (editingRope)
+            {
+                ropeEditors[currentRopeEditor].isSelected = true;
+
+                if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
+                {
+                    int nextRope = currentRopeEditor;
+
+                    if (nextRope + 1 == ropeEditors.Count) nextRope = 0;
+                    else nextRope++;
+
+                    ropeEditors[currentRopeEditor].isSelected = false;
+                    ropeEditors[currentRopeEditor].Update();
+
+                    currentRopeEditor = nextRope;
+                    ropeEditors[currentRopeEditor].isSelected = true;
+                }
+
+                if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
+                {
+                    int lastRope = currentRopeEditor;
+
+                    if (lastRope - 1 < 0) lastRope = ropeEditors.Count - 1;
+                    else lastRope--;
+
+                    ropeEditors[currentRopeEditor].isSelected = false;
+                    ropeEditors[currentRopeEditor].Update();
+
+                    currentRopeEditor = lastRope;
+                    ropeEditors[currentRopeEditor].isSelected = true;
+                }
+
+
+                ropeEditors[currentRopeEditor].Update();
+            }
+
+        if (editingCloth)
+        {
+            clothEditors[currentClothEditor].isSelected = true;
+
+            if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
+            {
+                int nextCloth = currentClothEditor;
+
+                if (nextCloth + 1 == clothEditors.Count) nextCloth = 0;
+                else nextCloth++;
+
+                clothEditors[currentClothEditor].isSelected = false;
+                clothEditors[currentClothEditor].Update();
+
+                currentClothEditor = nextCloth;
+                clothEditors[currentClothEditor].isSelected = true;
+            }
+
+            if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
+            {
+                int lastCloth = currentClothEditor;
+
+                if (lastCloth - 1 < 0) lastCloth = clothEditors.Count - 1;
+                else lastCloth--;
+
+                clothEditors[currentClothEditor].isSelected = false;
+                clothEditors[currentClothEditor].Update();
+
+                currentClothEditor = lastCloth;
+                clothEditors[currentClothEditor].isSelected = true;
+            }
+
+            clothEditors[currentClothEditor].Update();
+        }
+        
         // Delete all ropes
         if (newKbState.IsKeyDown(Keys.Space)) resetRope();
 
@@ -72,6 +187,9 @@ public class RopeSim : SimulationClass
 
         // Toggle drawing of points
         if (newKbState.IsKeyDown(Keys.W) && !oldKbState.IsKeyDown(Keys.W)) drawPoints = !drawPoints;
+
+        // Pause
+        if (newKbState.IsKeyDown(Keys.P) && !oldKbState.IsKeyDown(Keys.P)) pauseMotion = !pauseMotion;
             
 
         // Generate sheet
@@ -83,55 +201,6 @@ public class RopeSim : SimulationClass
             int distance = 25;
             generateSheet(pointNum, new Vector2(_screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true);
         }
-
-
-        if (newKbState.IsKeyDown(Keys.R) && !oldKbState.IsKeyDown(Keys.R))
-        {
-            if (editingRope == true) ropeEditors[currentRopeEditor].isSelected = false;
-            ropeEditors[currentRopeEditor].Update();
-            editingRope = !editingRope;
-            if (editingRope) editingCloth = false;
-        }
-
-
-        if (editingRope)
-        {
-            ropeEditors[currentRopeEditor].isSelected = true;
-
-            if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
-            {
-                int nextRope = currentRopeEditor;
-
-                if (nextRope + 1 == ropeEditors.Count) nextRope = 0;
-                else nextRope++;
-
-                ropeEditors[currentRopeEditor].isSelected = false;
-                ropeEditors[currentRopeEditor].Update();
-
-                currentRopeEditor = nextRope;
-                ropeEditors[currentRopeEditor].isSelected = true;
-            }
-
-            if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
-            {
-                int lastRope = currentRopeEditor;
-
-                if (lastRope - 1 < 0) lastRope = ropeEditors.Count - 1;
-                else lastRope--;
-
-                ropeEditors[currentRopeEditor].isSelected = false;
-                ropeEditors[currentRopeEditor].Update();
-
-                currentRopeEditor = lastRope;
-                ropeEditors[currentRopeEditor].isSelected = true;
-            }
-
-
-            ropeEditors[currentRopeEditor].Update();
-        }
-
-
-        
 
         oldKbState = newKbState;
     }
@@ -261,6 +330,7 @@ public class RopeSim : SimulationClass
             }
         }
 
+        clothEditors.Add(new ClothEditor(allPoints, verticalRopes, horizontalRopes));
 
     }
 
@@ -269,7 +339,23 @@ public class RopeSim : SimulationClass
     {
         ropes = new List<Rope>();
         entities = new List<Entity>();
+
+        for (int i = 0; i < ropeEditors.Count; i++)
+        {
+            ropeEditors[i].isSelected = false;
+            ropeEditors[i].Update();
+        }
+
+        for (int i = 0; i < clothEditors.Count; i++)
+        {
+            clothEditors[i].isSelected = false;
+            clothEditors[i].Update();
+        }
+
+        editingRope = false;
+        editingCloth = false;
         ropeEditors = new List<RopeEditor>();
+        clothEditors = new List<ClothEditor>();
     }
 
     private void addRope()

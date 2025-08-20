@@ -21,6 +21,7 @@ using RopeSimulation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
+using System.Data;
 
 namespace ClothEdit;
 
@@ -68,7 +69,11 @@ class ClothEditor
         newKbState = Keyboard.GetState();
 
 
-        if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right)) currentPointY = DownPoint();
+        if (newKbState.IsKeyDown(Keys.Down) && !oldKbState.IsKeyDown(Keys.Down)) currentPointY = DownPoint();
+        if (newKbState.IsKeyDown(Keys.Up) && !oldKbState.IsKeyDown(Keys.Up)) currentPointY = UpPoint();
+
+        if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right)) currentPointX = RightPoint();
+        if (newKbState.IsKeyDown(Keys.Left) && !oldKbState.IsKeyDown(Keys.Left)) currentPointX = LeftPoint();
 
 
         points[currentPointX][currentPointY].renderBall = true;
@@ -78,6 +83,7 @@ class ClothEditor
 
     private void Deselect()
     {
+        points[currentPointX][currentPointY].renderBall = false;
 
     }
 
@@ -86,7 +92,7 @@ class ClothEditor
     {
         int belowPoint = currentPointY;
 
-        if (belowPoint + 1 == maxX) belowPoint = 0;
+        if (belowPoint + 1 == maxY) belowPoint = 0;
         else belowPoint++;
 
         points[currentPointX][currentPointY].renderBall = false;
@@ -95,12 +101,41 @@ class ClothEditor
 
     }
 
-    private int AcrossPoint()
+    private int UpPoint()
     {
-        int acrossPoint = currentPointX;
+        int abovePoint = currentPointY;
 
-        return acrossPoint;
-        
+        if (abovePoint - 1 < 0) abovePoint = maxY - 1;
+        else abovePoint--;
+
+        points[currentPointX][currentPointY].renderBall = false;
+
+        return abovePoint;
+    }
+
+    private int RightPoint()
+    {
+        int rightPoint = currentPointX;
+
+        if (rightPoint + 1 == maxX) rightPoint = 0;
+        else rightPoint++;
+
+        points[currentPointX][currentPointY].renderBall = false;
+
+        return rightPoint;
+
+    }
+
+    private int LeftPoint()
+    {
+        int leftPoint = currentPointX;
+
+        if (leftPoint - 1 < 0) leftPoint = maxX - 1;
+        else leftPoint--;
+
+        points[currentPointX][currentPointY].renderBall = false;
+
+        return leftPoint;
     }
 
 }
