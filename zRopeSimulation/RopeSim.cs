@@ -88,13 +88,15 @@ public class RopeSim : SimulationClass
         // Generate sheet
         if (newKbState.IsKeyDown(Keys.S) && !oldKbState.IsKeyDown(Keys.S))
         {
-            generateSheet(40, new Vector2(_screenWidth / 2, 100), 10, 5, 70, true, true);
+            int sheetDistance = 25;
+            int ropeNum = 15;
+            int pointNum = 20;
+            int distance = 25;
+            generateSheet(pointNum, new Vector2( _screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true, true);
         }
 
 
         oldKbState = newKbState;
-
-       // generateLattice();
 
     }
 
@@ -121,7 +123,7 @@ public class RopeSim : SimulationClass
 
             for (int i = 0; i < entities.Count; i++)
             {
-                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.White, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 1f, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.Blue, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
             }
 
         }
