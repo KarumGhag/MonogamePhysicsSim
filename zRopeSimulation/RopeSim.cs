@@ -44,6 +44,9 @@ public class RopeSim : SimulationClass
     private bool editingCloth = false;
     private int currentClothEditor = 0;
 
+
+    private float stepThrough = 1f;
+
     public RopeSim(Game1 game1) : base(game1)
     {
         addRope();
@@ -54,8 +57,11 @@ public class RopeSim : SimulationClass
 
         base.Update(gameTime);
 
-        if (!pauseMotion)
+        stepThrough += 1f;
+
+        if (!pauseMotion || (newKbState.IsKeyDown(Keys.B) && !oldKbState.IsKeyDown(Keys.B)) || (newKbState.IsKeyDown(Keys.V) && stepThrough % 2 == 0))
         {
+
             for (int i = 0; i < springs.Count; i++) springs[i].ApplyForce();
 
             for (int i = 0; i < entities.Count; i++) entities[i].Update(gameTime);
