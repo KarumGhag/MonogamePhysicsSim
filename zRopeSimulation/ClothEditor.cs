@@ -90,11 +90,13 @@ class ClothEditor
 
         if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) SelectLastRope();
         if (newKbState.IsKeyDown(Keys.X) && !oldKbState.IsKeyDown(Keys.X)) SelectNextRope();
+        if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) CutRope();
+        if (newKbState.IsKeyDown(Keys.N)) CutAll();
+        if (newKbState.IsKeyDown(Keys.M)) RepairCloth();
 
         selectedRope = nearestFourRopes[selectedPosInArr];
 
 
-        selectedRope.colour = Color.Red;
 
         oldKbState = Keyboard.GetState();
 
@@ -103,6 +105,22 @@ class ClothEditor
     private void Deselect()
     {
         points[currentPointX][currentPointY].renderBall = false;
+
+        for (int i = 0; i < verticalRopes.Count; i++)
+        {
+            for (int j = 0; j < verticalRopes[i].Count; j++)
+            {
+                verticalRopes[i][j].colour = Global.defaultRopeColour;
+            }
+        }
+
+        for (int i = 0; i < horizontalRopes.Count; i++)
+        {
+            for (int j = 0; j < horizontalRopes[i].Count; j++)
+            {
+                horizontalRopes[i][j].colour = Global.defaultRopeColour;
+            }
+        }
     }
 
 
@@ -165,6 +183,7 @@ class ClothEditor
             for (int j = 0; j < verticalRopes[i].Count; j++)
             {
                 verticalRopes[i][j].colour = Global.selectedRopeColour;
+                if (!verticalRopes[i][j].active) verticalRopes[i][j].colour = Global.backgroundColour;
             }
         }
 
@@ -173,6 +192,7 @@ class ClothEditor
             for (int j = 0; j < horizontalRopes[i].Count; j++)
             {
                 horizontalRopes[i][j].colour = Global.selectedRopeColour;
+                if (!horizontalRopes[i][j].active) horizontalRopes[i][j].colour = Global.backgroundColour;
             }
         }
 
@@ -197,31 +217,41 @@ class ClothEditor
 
         if (!offClothRopes[0]) // Above
         {
-            verticalRopes[currentPointX][currentPointY - 1].colour = Color.Pink;
             nearestFourRopes[0] = verticalRopes[currentPointX][currentPointY - 1];
         }
         else if (selectedPosInArr == 0) selectedPosInArr++;
 
         if (!offClothRopes[2]) // Below
         {
-            verticalRopes[currentPointX][currentPointY].colour = Color.Pink;
             nearestFourRopes[2] = verticalRopes[currentPointX][currentPointY];
         }
         else if (selectedPosInArr == 2) selectedPosInArr++;
 
         if (!offClothRopes[3]) // Left
         {
-            horizontalRopes[currentPointX - 1][currentPointY].colour = Color.Pink;
             nearestFourRopes[3] = horizontalRopes[currentPointX - 1][currentPointY];
         }
         else if (selectedPosInArr == 3) selectedPosInArr = 0;
 
         if (!offClothRopes[1]) // Right
         {
-            horizontalRopes[currentPointX][currentPointY].colour = Color.Pink;
             nearestFourRopes[1] = horizontalRopes[currentPointX][currentPointY];
         }
         else if (selectedPosInArr == 1) selectedPosInArr++;
+
+        for (int i = 0; i < nearestFourRopes.Length; i++)
+        {
+            if (nearestFourRopes[i] == null) continue;
+            nearestFourRopes[i].colour = Color.Coral;
+
+            if (nearestFourRopes[i] == selectedRope) nearestFourRopes[i].colour = Color.Red;
+
+            if (!nearestFourRopes[i].active && nearestFourRopes[i] == selectedRope) nearestFourRopes[i].colour = Color.Gray;
+            else if (!nearestFourRopes[i].active) nearestFourRopes[i].colour = Color.LightGray;
+
+
+        }
+
 
     }
 
@@ -237,6 +267,36 @@ class ClothEditor
         if (selectedPosInArr < 0) selectedPosInArr = 3;
     }
 
+    private void CutRope()
+    {
+        selectedRope.active = !selectedRope.active;
+    }
 
+    private void CutAll()
+    {
+        for (int i = 0; i < nearestFourRopes.Length; i++)
+        {
+            nearestFourRopes[i].active = false;
+        }
+    }
+
+    private void RepairCloth()
+    {
+        for (int i = 0; i < verticalRopes.Count; i++)
+        {
+            for (int j = 0; j < verticalRopes[i].Count; j++)
+            {
+                verticalRopes[i][j].active = true;
+            }
+        }
+
+        for (int i = 0; i < horizontalRopes.Count; i++)
+        {
+            for (int j = 0; j < horizontalRopes[i].Count; j++)
+            {
+                horizontalRopes[i][j].active = true;
+            }
+        }
+    }
 
 }

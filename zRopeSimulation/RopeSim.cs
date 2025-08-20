@@ -24,6 +24,40 @@ using Microsoft.Xna.Framework.Media;
 
 namespace RopeSimulation;
 
+
+
+
+
+/*
+===== KEYBINDS =====
+P = Pause
+B = Single frame forward
+V = Hold for many frame forward
+
+W = Toggle all point visibility
+D = Add single rope
+A = Add many rope
+S = Add cloth
+
+R = Toggle whether editing ropes or not:
+    Arrow keys to go up or down across rope
+    C = cut red rope and repair grey ropes
+    Z = swap whether above rope or below rope selected
+
+T = Toggle whether editing cloths or not:
+    Arrow keys to select point
+    Z = go forward through brown/light grey ropes (red/dark grey indicates the currently selected one)
+    X = same as Z but backwards
+    C = cut red rope and repair dark grey rope
+    N = cut all ropes around the point, does not repair
+    M = Repair all of the cloth (a bit buggy but does work if you repair some then break some then repair again)
+
+Q/E = cycle through the ropes/clothes to edit
+
+*/
+
+
+
 public class RopeSim : SimulationClass
 {
 
@@ -112,40 +146,40 @@ public class RopeSim : SimulationClass
 
 
         if (editingRope)
+        {
+            ropeEditors[currentRopeEditor].isSelected = true;
+
+            if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
             {
-                ropeEditors[currentRopeEditor].isSelected = true;
+                int nextRope = currentRopeEditor;
 
-                if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
-                {
-                    int nextRope = currentRopeEditor;
+                if (nextRope + 1 == ropeEditors.Count) nextRope = 0;
+                else nextRope++;
 
-                    if (nextRope + 1 == ropeEditors.Count) nextRope = 0;
-                    else nextRope++;
-
-                    ropeEditors[currentRopeEditor].isSelected = false;
-                    ropeEditors[currentRopeEditor].Update();
-
-                    currentRopeEditor = nextRope;
-                    ropeEditors[currentRopeEditor].isSelected = true;
-                }
-
-                if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
-                {
-                    int lastRope = currentRopeEditor;
-
-                    if (lastRope - 1 < 0) lastRope = ropeEditors.Count - 1;
-                    else lastRope--;
-
-                    ropeEditors[currentRopeEditor].isSelected = false;
-                    ropeEditors[currentRopeEditor].Update();
-
-                    currentRopeEditor = lastRope;
-                    ropeEditors[currentRopeEditor].isSelected = true;
-                }
-
-
+                ropeEditors[currentRopeEditor].isSelected = false;
                 ropeEditors[currentRopeEditor].Update();
+
+                currentRopeEditor = nextRope;
+                ropeEditors[currentRopeEditor].isSelected = true;
             }
+
+            if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
+            {
+                int lastRope = currentRopeEditor;
+
+                if (lastRope - 1 < 0) lastRope = ropeEditors.Count - 1;
+                else lastRope--;
+
+                ropeEditors[currentRopeEditor].isSelected = false;
+                ropeEditors[currentRopeEditor].Update();
+
+                currentRopeEditor = lastRope;
+                ropeEditors[currentRopeEditor].isSelected = true;
+            }
+
+
+            ropeEditors[currentRopeEditor].Update();
+        }
 
         if (editingCloth)
         {
@@ -181,7 +215,7 @@ public class RopeSim : SimulationClass
 
             clothEditors[currentClothEditor].Update();
         }
-        
+
         // Delete all ropes
         if (newKbState.IsKeyDown(Keys.Space)) resetRope();
 
@@ -196,7 +230,7 @@ public class RopeSim : SimulationClass
 
         // Pause
         if (newKbState.IsKeyDown(Keys.P) && !oldKbState.IsKeyDown(Keys.P)) pauseMotion = !pauseMotion;
-            
+
 
         // Generate sheet
         if (newKbState.IsKeyDown(Keys.S) && !oldKbState.IsKeyDown(Keys.S))
@@ -232,11 +266,11 @@ public class RopeSim : SimulationClass
 
         for (int i = 0; i < entities.Count; i++)
         {
-           if (drawPoints || entities[i].renderBall) _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, entities[i].colour, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
+            if (drawPoints || entities[i].renderBall) _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, entities[i].colour, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
         }
 
 
-        
+
 
 
 
