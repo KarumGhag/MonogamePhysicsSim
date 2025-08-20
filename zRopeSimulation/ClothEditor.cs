@@ -22,6 +22,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
 using System.Data;
+using System.Linq;
 
 namespace ClothEdit;
 
@@ -33,20 +34,20 @@ class ClothEditor
 
 
     private List<List<VerletObject>> points = new List<List<VerletObject>>(); // points[x][y]
-    private List<Rope> verticalRopes = new List<Rope>();
-    private List<Rope> horizontalRopes = new List<Rope>();
+    private List<List<Rope>> verticalRopes = new List<List<Rope>>();
+    private List<List<Rope>> horizontalRopes = new List<List<Rope>>();
 
     private int currentPointX = 0;
     private int currentPointY = 0;
 
     private int maxX = 0;
     private int maxY = 0;
-    private int currentWholeRope = 0;
 
 
     public bool isSelected = false;
 
-    public ClothEditor(List<List<VerletObject>> points, List<Rope> verticalRopes, List<Rope> horizontalRopes)
+
+    public ClothEditor(List<List<VerletObject>> points, List<List<Rope>> verticalRopes, List<List<Rope>> horizontalRopes)
     {
         this.points = points;
         this.verticalRopes = verticalRopes;
@@ -78,13 +79,19 @@ class ClothEditor
 
         points[currentPointX][currentPointY].renderBall = true;
 
+        AllRopesGreen();
+
+
+        SolveRope();
+
+
         oldKbState = Keyboard.GetState();
+
     }
 
     private void Deselect()
     {
         points[currentPointX][currentPointY].renderBall = false;
-
     }
 
 
@@ -97,6 +104,7 @@ class ClothEditor
 
         points[currentPointX][currentPointY].renderBall = false;
 
+        SolveRope();
         return belowPoint;
 
     }
@@ -110,6 +118,7 @@ class ClothEditor
 
         points[currentPointX][currentPointY].renderBall = false;
 
+        SolveRope();
         return abovePoint;
     }
 
@@ -137,5 +146,71 @@ class ClothEditor
 
         return leftPoint;
     }
+
+    private void AllRopesGreen()
+    {
+        for (int i = 0; i < verticalRopes.Count; i++)
+        {
+            for (int j = 0; j < verticalRopes[i].Count; j++)
+            {
+                verticalRopes[i][j].colour = Global.selectedRopeColour;
+            }
+        }
+
+        for (int i = 0; i < horizontalRopes.Count; i++)
+        {
+            for (int j = 0; j < horizontalRopes[i].Count; j++)
+            {
+                horizontalRopes[i][j].colour = Global.selectedRopeColour;
+            }
+        }
+
+
+    }
+    private void SolveRope()
+    {
+
+        Rope[] nearestFourRopes = new Rope[4];
+        bool[] offClothRopes = new bool[4] { false, false, false, false };
+
+        if (currentPointY == 0) offClothRopes[0] = true; // Above
+        if (currentPointY == maxY - 1) offClothRopes[2] = true; // Below
+
+        if (currentPointX == 0) offClothRopes[3] = true; // Left
+        if (currentPointX == maxX - 1) offClothRopes[1] = true; // Right 
+
+
+
+        if (!offClothRopes[0]) // Above
+        {
+            verticalRopes[currentPointX][currentPointY - 1].colour = Color.Yellow;
+            nearestFourRopes[0] = verticalRopes[currentPointX][currentPointY - 1];
+        }
+        if (!offClothRopes[2]) // Below
+        {
+            verticalRopes[currentPointX][currentPointY].colour = Color.Yellow;
+            nearestFourRopes[2] = verticalRopes[currentPointX][currentPointY];
+        }
+
+        if (!offClothRopes[3]) // Left
+        {
+            horizontalRopes[currentPointX - 1][currentPointY].colour = Color.Yellow;
+            nearestFourRopes[3] = horizontalRopes[currentPointX - 1][currentPointY];
+        }
+        if (!offClothRopes[1]) // Right
+        {
+            horizontalRopes[currentPointX][currentPointY].colour = Color.Yellow;
+            nearestFourRopes[1] = horizontalRopes[currentPointX][currentPointY];
+        }
+
+    }
+
+
+
+    //    |
+    //   - -
+    //    |
+
+
 
 }

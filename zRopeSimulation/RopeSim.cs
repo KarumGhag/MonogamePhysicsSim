@@ -276,8 +276,8 @@ public class RopeSim : SimulationClass
 
     private void generateSheet(int numPoint, Vector2 anchorPos, float distance, int numRope, float sheetDistance, bool allAnchored = false, bool firstLastAnchor = false)
     {
-        List<Rope> verticalRopes = new List<Rope>();
-        List<Rope> horizontalRopes = new List<Rope>();
+        List<List<Rope>> verticalRopes = new List<List<Rope>>();
+        List<List<Rope>> horizontalRopes = new List<List<Rope>>();
         List<List<VerletObject>> allPoints = new List<List<VerletObject>>();
 
         List<VerletObject> currentPoints;
@@ -294,6 +294,9 @@ public class RopeSim : SimulationClass
 
             nextPointPos = anchorPos;
             currentPoints = new List<VerletObject>();
+
+            List<Rope> currentVertical = new List<Rope>();
+
             // Generate points
             for (int i = 0; i < numPoint; i++)
             {
@@ -320,8 +323,10 @@ public class RopeSim : SimulationClass
             // Makes ropes between each point just generated
             for (int i = 1; i < numPoint; i++)
             {
-                verticalRopes.Add(new Rope(currentPoints[i - 1], currentPoints[i], distance, ropes));
+                currentVertical.Add(new Rope(currentPoints[i - 1], currentPoints[i], distance, ropes));
             }
+
+            verticalRopes.Add(currentVertical);
 
         }
 
@@ -330,10 +335,13 @@ public class RopeSim : SimulationClass
         // this will connect point j of rope i to point j of rope i + 1
         for (int i = 0; i < numRope - 1; i++)
         {
+            List<Rope> currentHorizontal = new List<Rope>();
             for (int j = 0; j < numPoint; j++)
             {
-                horizontalRopes.Add(new Rope(allPoints[i][j], allPoints[i + 1][j], sheetDistance, ropes));
+                currentHorizontal.Add(new Rope(allPoints[i][j], allPoints[i + 1][j], sheetDistance, ropes));
             }
+
+            horizontalRopes.Add(currentHorizontal);
         }
 
         clothEditors.Add(new ClothEditor(allPoints, verticalRopes, horizontalRopes));
