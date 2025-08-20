@@ -43,6 +43,7 @@ R = Toggle whether editing ropes or not:
     Arrow keys to go up or down across rope
     C = cut red rope and repair grey ropes
     Z = swap whether above rope or below rope selected
+    G = toggle anchor
 
 T = Toggle whether editing cloths or not:
     Arrow keys to select point
@@ -51,6 +52,7 @@ T = Toggle whether editing cloths or not:
     C = cut red rope and repair dark grey rope
     N = cut all ropes around the point, does not repair
     M = Repair all of the cloth (a bit buggy but does work if you repair some then break some then repair again)
+    G = Toggle anchor
 
 Q/E = cycle through the ropes/clothes to edit
 
@@ -260,7 +262,7 @@ public class RopeSim : SimulationClass
 
         for (int i = 0; i < ropes.Count; i++)
         {
-            game1.DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, ropes[i].colour, 5f);
+            if(ropes[i].renderLine) game1.DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, ropes[i].colour, 5f);
         }
 
 
