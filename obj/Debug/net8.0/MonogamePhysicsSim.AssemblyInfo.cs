@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MonogamePhysicsSim")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1482d7bbd5058a53329732505cae2eacb7636aa8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d374757af77ff6fd46df49d1e782b46c2c4a285")]
 [assembly: System.Reflection.AssemblyProductAttribute("MonogamePhysicsSim")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MonogamePhysicsSim")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

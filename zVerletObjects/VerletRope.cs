@@ -25,6 +25,8 @@ public class Rope
 
     public bool active = true;
 
+    public Color colour = Global.defaultRopeColour;
+
     public Rope(VerletObject point1, VerletObject point2, float restLen, List<Rope> ropes)
     {
         this.point1 = point1;

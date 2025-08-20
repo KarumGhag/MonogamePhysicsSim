@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Audio;
 using System.Threading;
 using RopeEdit;
 using System.Collections.Concurrent;
+using Microsoft.Xna.Framework.Media;
 
 namespace RopeSimulation;
 
@@ -95,6 +96,9 @@ public class RopeSim : SimulationClass
 
         if (editingRope)
         {
+
+            ropeEditors[currentRopeEditor].isSelected = true;
+
             if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
             {
                 int nextRope = currentRopeEditor;
@@ -103,6 +107,7 @@ public class RopeSim : SimulationClass
                 else nextRope++;
 
                 ropeEditors[currentRopeEditor].isSelected = false;
+                ropeEditors[currentRopeEditor].Update();
 
                 currentRopeEditor = nextRope;
                 ropeEditors[currentRopeEditor].isSelected = true;
@@ -116,6 +121,7 @@ public class RopeSim : SimulationClass
                 else lastRope--;
 
                 ropeEditors[currentRopeEditor].isSelected = false;
+                ropeEditors[currentRopeEditor].Update();
 
                 currentRopeEditor = lastRope;
                 ropeEditors[currentRopeEditor].isSelected = true;
@@ -149,7 +155,7 @@ public class RopeSim : SimulationClass
 
         for (int i = 0; i < ropes.Count; i++)
         {
-            game1.DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 5f);
+            game1.DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, ropes[i].colour, 5f);
         }
 
 
@@ -192,7 +198,7 @@ public class RopeSim : SimulationClass
 
         ropePoints.Add(generatedPoints);
 
-        ropeEditors.Add(new RopeEditor(generatedPoints));
+        ropeEditors.Add(new RopeEditor(generatedPoints, generatedRope));
 
     }
 
@@ -203,7 +209,7 @@ public class RopeSim : SimulationClass
         List<Rope> sheetRopes = new List<Rope>();
         List<List<VerletObject>> allPoints = new List<List<VerletObject>>();
 
-        List<VerletObject> currentPoints = new List<VerletObject>();
+        List<VerletObject> currentPoints;
 
         Vector2 nextPointPos;
 

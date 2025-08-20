@@ -25,24 +25,27 @@ namespace RopeEdit;
 class RopeEditor
 {
     public static int numRopes;
-    private int ropeNum;
 
-    private List<VerletObject> rope = new List<VerletObject>();
+    private List<VerletObject> points = new List<VerletObject>();
+
+    private List<Rope> ropes = new List<Rope>();
 
 
     public int currentSelected = 0;
+    public int currentRope = 0;
 
     public bool isSelected = false;
 
     private KeyboardState newKbState;
     private KeyboardState oldKbState;
 
-    public RopeEditor(List<VerletObject> rope)
+    public RopeEditor(List<VerletObject> points, List<Rope> ropes)
     {
         numRopes++;
-        ropeNum = numRopes;
 
-        this.rope = rope;
+        this.points = points;
+        this.ropes = ropes;
+
         oldKbState = Keyboard.GetState();
 
     }
@@ -50,61 +53,98 @@ class RopeEditor
 
     public void Update()
     {
+
+
+        if (!isSelected)
+        {
+            Deselect();
+            return;
+        }
+
         newKbState = Keyboard.GetState();
 
-        if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right))
-        {
-            currentSelected = GetNext();
-        }
+        if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right)) currentSelected = GetNext();
 
-        if (newKbState.IsKeyDown(Keys.Down) && !oldKbState.IsKeyDown(Keys.Down))
-        {
-            currentSelected = GetNext();
-        }
+        if (newKbState.IsKeyDown(Keys.Down) && !oldKbState.IsKeyDown(Keys.Down)) currentSelected = GetNext();
 
 
+        if (newKbState.IsKeyDown(Keys.Left) && !oldKbState.IsKeyDown(Keys.Left)) currentSelected = GetLast();
 
-        if (newKbState.IsKeyDown(Keys.Left) && !oldKbState.IsKeyDown(Keys.Left))
-        {
-            currentSelected = GetLast();
-        }
-
-        if (newKbState.IsKeyDown(Keys.Up) && !oldKbState.IsKeyDown(Keys.Up))
-        {
-            currentSelected = GetLast();
-        }
+        if (newKbState.IsKeyDown(Keys.Up) && !oldKbState.IsKeyDown(Keys.Up)) currentSelected = GetLast();
 
 
-        rope[currentSelected].renderBall = true;
+        if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) currentRope = GetNextRope();
+
+        if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) ropes[currentRope].active = !ropes[currentRope].active;
+
+
+        points[currentSelected].renderBall = true;
+        ropes[currentRope].colour = Color.Red;
+
 
         oldKbState = Keyboard.GetState();
     }
 
 
+    private void Deselect()
+    {
+        points[currentSelected].renderBall = false;
+    }
+
+    // Cycles forwards through the points list
     private int GetNext()
     {
 
         int nextPoint = currentSelected;
 
-        if (nextPoint + 1 == rope.Count) nextPoint = 0;
+        if (nextPoint + 1 == points.Count) nextPoint = 0;
         else nextPoint++;
 
-        rope[currentSelected].renderBall = false;
+        points[currentSelected].renderBall = false;
 
+        ropes[currentRope].colour = Global.defaultRopeColour;
+        currentRope++;
+
+        FixRope(nextPoint);
         return nextPoint;
     }
 
 
+    // Cycles backwards through the points list
     private int GetLast()
     {
 
         int lastPoint = currentSelected;
 
-        if (lastPoint - 1 < 0) lastPoint = rope.Count - 1;
+        if (lastPoint - 1 < 0) lastPoint = points.Count - 1;
         else lastPoint--;
 
-        rope[currentSelected].renderBall = false;
+        points[currentSelected].renderBall = false;
 
+        ropes[currentRope].colour = Global.defaultRopeColour;
+        currentRope--;
+
+        FixRope(lastPoint);
         return lastPoint;
     }
+
+
+    private int GetNextRope()
+    {
+        int nextRope = currentSelected;
+
+        ropes[currentRope].colour = Global.defaultRopeColour;
+
+        if (currentRope == currentSelected && currentSelected != 0) nextRope--;
+        else if (currentRope == currentSelected - 1 && currentSelected > ropes.Count) nextRope++;
+
+        return nextRope;
+    }
+
+    private void FixRope(int pos)
+    {
+        if (pos == 0) currentRope = 0;
+        if (pos == points.Count - 1) currentRope = pos - 1;
+    }
+
 }

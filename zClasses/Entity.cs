@@ -23,7 +23,7 @@ public class Entity
     {
         this.sprite = sprite;
         this.position = position;
-        this.colour = colour ?? Color.Blue;
+        this.colour = colour ?? Global.defaultPointColour;
         entities.Add(this);
 
     }

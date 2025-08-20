@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,6 +21,9 @@ public static class Global
 
     public static int width;
     public static int height;
+
+    public static Color defaultRopeColour = Color.White;
+    public static Color defaultPointColour = Color.Blue;
 
     public static float GetVectorLen(Vector2 vector)
     {
