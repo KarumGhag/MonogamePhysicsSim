@@ -90,8 +90,15 @@ public class Game1 : Game
 
     }
 
+
+    private float x = 2;
+    public bool slowMotion = false;
+    public float slowMotionIncrement = 0.25f;
     protected override void Update(GameTime gameTime)
     {
+        if (slowMotion) x += slowMotionIncrement;
+
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
@@ -102,7 +109,10 @@ public class Game1 : Game
         Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         // Updates the currently in use simulation
-        currentSimulation.Update(gameTime);
+        if (x % 2 == 0)
+        {
+            currentSimulation.Update(gameTime);
+        }
 
         base.Update(gameTime);
     }

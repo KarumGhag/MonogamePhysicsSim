@@ -23,6 +23,7 @@ public class Rope
     private Vector2 distanceVec;
     private Vector2 midPoint;
 
+    public bool active = true;
 
     public Rope(VerletObject point1, VerletObject point2, float restLen, List<Rope> ropes)
     {
@@ -72,6 +73,9 @@ public class Rope
 
     public void ConstrainPoints()
     {
+
+        if (!active) return;
+
         distanceVec = point1.position - point2.position;
 
         Vector2 desiredPoint1 = getCorrectedPos()[0];
