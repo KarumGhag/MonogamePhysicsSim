@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Audio;
 using System.Threading;
 using RopeEdit;
+using ClothEdit;
 using System.Collections.Concurrent;
 using Microsoft.Xna.Framework.Media;
 
@@ -32,15 +33,12 @@ public class RopeSim : SimulationClass
 
     private bool drawPoints = false;
 
-    private List<List<List<VerletObject>>> sheetPoints = new List<List<List<VerletObject>>>();
-    private List<List<VerletObject>> ropePoints = new List<List<VerletObject>>();
-
 
     private List<RopeEditor> ropeEditors = new List<RopeEditor>();
     private bool editingRope = false;
     private int currentRopeEditor = 0;
 
-
+    private List<ClothEditor> clothEditors = new List<ClothEditor>();
     private bool editingCloth = false;
 
     public RopeSim(Game1 game1) : base(game1)
@@ -83,7 +81,7 @@ public class RopeSim : SimulationClass
             int ropeNum = 15;
             int pointNum = 20;
             int distance = 25;
-            generateSheet(pointNum, new Vector2(_screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true, true);
+            generateSheet(pointNum, new Vector2(_screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true);
         }
 
 
@@ -98,7 +96,6 @@ public class RopeSim : SimulationClass
 
         if (editingRope)
         {
-
             ropeEditors[currentRopeEditor].isSelected = true;
 
             if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
@@ -131,9 +128,6 @@ public class RopeSim : SimulationClass
 
 
             ropeEditors[currentRopeEditor].Update();
-
-
-
         }
 
 
@@ -198,7 +192,6 @@ public class RopeSim : SimulationClass
 
         }
 
-        ropePoints.Add(generatedPoints);
 
         ropeEditors.Add(new RopeEditor(generatedPoints, generatedRope));
 
@@ -208,7 +201,8 @@ public class RopeSim : SimulationClass
 
     private void generateSheet(int numPoint, Vector2 anchorPos, float distance, int numRope, float sheetDistance, bool allAnchored = false, bool firstLastAnchor = false)
     {
-        List<Rope> sheetRopes = new List<Rope>();
+        List<Rope> verticalRopes = new List<Rope>();
+        List<Rope> horizontalRopes = new List<Rope>();
         List<List<VerletObject>> allPoints = new List<List<VerletObject>>();
 
         List<VerletObject> currentPoints;
@@ -251,7 +245,7 @@ public class RopeSim : SimulationClass
             // Makes ropes between each point just generated
             for (int i = 1; i < numPoint; i++)
             {
-                sheetRopes.Add(new Rope(currentPoints[i - 1], currentPoints[i], distance, ropes));
+                verticalRopes.Add(new Rope(currentPoints[i - 1], currentPoints[i], distance, ropes));
             }
 
         }
@@ -263,11 +257,11 @@ public class RopeSim : SimulationClass
         {
             for (int j = 0; j < numPoint; j++)
             {
-                sheetRopes.Add(new Rope(allPoints[i][j], allPoints[i + 1][j], sheetDistance, ropes));
+                horizontalRopes.Add(new Rope(allPoints[i][j], allPoints[i + 1][j], sheetDistance, ropes));
             }
         }
 
-        sheetPoints.Add(allPoints);
+
     }
 
 
