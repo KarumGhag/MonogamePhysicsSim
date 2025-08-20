@@ -22,7 +22,9 @@ public static class Global
     public static int width;
     public static int height;
 
+    public static Color backgroundColour = Color.Black;
     public static Color defaultRopeColour = Color.White;
+    public static Color selectedRopeColour = Color.LightGreen;
     public static Color defaultPointColour = Color.Blue;
 
     public static float GetVectorLen(Vector2 vector)

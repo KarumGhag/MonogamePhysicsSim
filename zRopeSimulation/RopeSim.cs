@@ -89,6 +89,8 @@ public class RopeSim : SimulationClass
 
         if (newKbState.IsKeyDown(Keys.R) && !oldKbState.IsKeyDown(Keys.R))
         {
+            if (editingRope == true) ropeEditors[currentRopeEditor].isSelected = false;
+            ropeEditors[currentRopeEditor].Update();
             editingRope = !editingRope;
             if (editingRope) editingCloth = false;
         }

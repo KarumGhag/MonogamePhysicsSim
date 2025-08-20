@@ -75,20 +75,35 @@ class RopeEditor
 
         if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) currentRope = GetNextRope();
 
-        if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) ropes[currentRope].active = !ropes[currentRope].active;
+        if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) CutRope();
+
 
 
         points[currentSelected].renderBall = true;
-        ropes[currentRope].colour = Color.Red;
+        if (ropes[currentRope].active) ropes[currentRope].colour = Color.Red;
+        for (int i = 0; i < ropes.Count; i++)
+        {
+            if (!ropes[i].active && i == currentRope) ropes[i].colour = Color.Gray;
+            else if (!ropes[i].active) ropes[i].colour = Global.backgroundColour;
+            else if (i != currentRope) ropes[i].colour = Global.selectedRopeColour;
+        }
 
 
         oldKbState = Keyboard.GetState();
     }
 
-
+    private void CutRope()
+    {
+        ropes[currentRope].active = !ropes[currentRope].active;
+    }
     private void Deselect()
     {
         points[currentSelected].renderBall = false;
+        for (int i = 0; i < ropes.Count; i++)
+        {
+            if (ropes[i].active) ropes[i].colour = Global.defaultRopeColour;
+            else ropes[i].colour = Global.backgroundColour;
+        }
     }
 
     // Cycles forwards through the points list
@@ -102,7 +117,7 @@ class RopeEditor
 
         points[currentSelected].renderBall = false;
 
-        ropes[currentRope].colour = Global.defaultRopeColour;
+        ropes[currentRope].colour = Global.selectedRopeColour;
         currentRope++;
 
         FixRope(nextPoint);
@@ -121,7 +136,7 @@ class RopeEditor
 
         points[currentSelected].renderBall = false;
 
-        ropes[currentRope].colour = Global.defaultRopeColour;
+        ropes[currentRope].colour = Global.selectedRopeColour;
         currentRope--;
 
         FixRope(lastPoint);
@@ -133,7 +148,7 @@ class RopeEditor
     {
         int nextRope = currentSelected;
 
-        ropes[currentRope].colour = Global.defaultRopeColour;
+        ropes[currentRope].colour = Global.selectedRopeColour;
 
         if (currentRope == currentSelected && currentSelected != 0) nextRope--;
         else if (currentRope == currentSelected - 1 && currentSelected > ropes.Count) nextRope++;

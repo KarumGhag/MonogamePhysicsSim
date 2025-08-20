@@ -119,7 +119,7 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
+        GraphicsDevice.Clear(Global.backgroundColour);
 
         // Draws the currently in use simulation
         currentSimulation.Draw(gameTime);
