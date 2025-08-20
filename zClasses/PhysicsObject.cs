@@ -20,7 +20,7 @@ public class PhysicsObject : Entity
 
     private bool stationary = false;
 
-    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities, bool stationary = false, float gravity = 100) : base(sprite, position, entities)
+    public PhysicsObject(Texture2D sprite, Vector2 position, List<Entity> entities,Color? colour = null ,bool stationary = false, float gravity = 100) : base(sprite, position, entities, colour)
     {
         this.gravity = gravity;
         this.stationary = stationary;

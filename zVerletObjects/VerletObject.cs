@@ -26,7 +26,7 @@ public class VerletObject : Entity
 
     public bool stationary = false;
 
-    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), bool stationary = false, float bounceDamping = 0.5f) : base(sprite, position, entities)
+    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(),Color? colour = null ,bool stationary = false, float bounceDamping = 0.5f) : base(sprite, position, entities, colour)
     {
         oldPosition = position - startVelocity;
         velocity = position - oldPosition;

@@ -123,7 +123,7 @@ public class RopeSim : SimulationClass
 
             for (int i = 0; i < entities.Count; i++)
             {
-                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, Color.Blue, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
+                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, entities[i].colour, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
             }
 
         }
@@ -137,7 +137,7 @@ public class RopeSim : SimulationClass
         List<Rope> generatedRope = new List<Rope>();
         List<VerletObject> generatedPoints = new List<VerletObject>();
 
-        VerletObject anchor = new VerletObject(Global._circle, anchorPos, entities, verletObjects, new Vector2(0, 0), anchorStationary);
+        VerletObject anchor = new VerletObject(Global._circle, anchorPos, entities, verletObjects, new Vector2(0, 0), Color.Red, anchorStationary);
 
         generatedPoints.Add(anchor);
 
@@ -188,7 +188,7 @@ public class RopeSim : SimulationClass
                     // First point will always anchor. if i want all first points to anchor then it does not care for j. if i want first and last to anchor then it will do this as long as it is the first point in the rope
                     if (i == 0 && (j == 0 || allAnchored) || ((firstLastAnchor && j == numRope - 1) && i == 0))
                     {
-                        currentPoints.Add(new VerletObject(Global._circle, new Vector2(anchorPos.X + (j * sheetDistance), anchorPos.Y), entities, verletObjects, new Vector2(0, 0), true));
+                        currentPoints.Add(new VerletObject(Global._circle, new Vector2(anchorPos.X + (j * sheetDistance), anchorPos.Y), entities, verletObjects, new Vector2(0, 0), Color.Red, true));
                         continue;
                     }
 

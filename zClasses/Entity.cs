@@ -15,11 +15,15 @@ public class Entity
     public Vector2 position;
     public float deltaTime;
 
-    public Entity(Texture2D sprite, Vector2 position, List<Entity> entities)
+    public Color colour;
+
+    public Entity(Texture2D sprite, Vector2 position, List<Entity> entities, Color? colour = null)
     {
         this.sprite = sprite;
         this.position = position;
+        this.colour = colour ?? Color.Blue;
         entities.Add(this);
+
     }
 
     public virtual void Update(GameTime gameTime)
