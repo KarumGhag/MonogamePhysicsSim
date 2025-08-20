@@ -17,6 +17,8 @@ using Simulation;
 using System.Text;
 using Microsoft.Xna.Framework.Audio;
 using System.Threading;
+using RopeEdit;
+using System.Collections.Concurrent;
 
 namespace RopeSimulation;
 
@@ -28,6 +30,18 @@ public class RopeSim : SimulationClass
     public List<Rope> ropes = new List<Rope>();
 
     private bool drawPoints = false;
+
+    private List<List<List<VerletObject>>> sheetPoints = new List<List<List<VerletObject>>>();
+    private List<List<VerletObject>> ropePoints = new List<List<VerletObject>>();
+
+
+    private List<RopeEditor> ropeEditors = new List<RopeEditor>();
+    private bool editingRope = false;
+    private int currentRopeEditor = 0;
+
+
+    private bool editingCloth = false;
+
     public RopeSim(Game1 game1) : base(game1)
     {
         addRope();
@@ -39,51 +53,27 @@ public class RopeSim : SimulationClass
         base.Update(gameTime);
 
 
-        for (int i = 0; i < springs.Count; i++)
-        {
-            springs[i].ApplyForce();
-        }
+        for (int i = 0; i < springs.Count; i++) springs[i].ApplyForce();
 
-        for (int i = 0; i < entities.Count; i++)
-        {
-            entities[i].Update(gameTime);
-        }
+        for (int i = 0; i < entities.Count; i++) entities[i].Update(gameTime);
 
-        for (int i = 0; i < verletObjects.Count; i++)
-        {
-            verletObjects[i].Update();
-        }
+        for (int i = 0; i < verletObjects.Count; i++) verletObjects[i].Update();
 
-        for (int i = 0; i < ropes.Count; i++)
-        {
-            ropes[i].ConstrainPoints();
-
-        }
+        for (int i = 0; i < ropes.Count; i++) ropes[i].ConstrainPoints();
 
 
         // Delete all ropes
-        if (newKbState.IsKeyDown(Keys.Space))
-        {
-            resetRope();
-        }
+        if (newKbState.IsKeyDown(Keys.Space)) resetRope();
 
         // Add many ropes
-        if (newKbState.IsKeyDown(Keys.A))
-        {
-            addRope();
-        }
+        if (newKbState.IsKeyDown(Keys.A)) addRope();
 
         // Add Single rope
-        if (newKbState.IsKeyDown(Keys.D) && !oldKbState.IsKeyDown(Keys.D))
-        {
-            addRope();
-        }
+        if (newKbState.IsKeyDown(Keys.D) && !oldKbState.IsKeyDown(Keys.D)) addRope();
 
         // Toggle drawing of points
-        if (newKbState.IsKeyDown(Keys.W) && !oldKbState.IsKeyDown(Keys.W))
-        {
-            drawPoints = !drawPoints;
-        }
+        if (newKbState.IsKeyDown(Keys.W) && !oldKbState.IsKeyDown(Keys.W)) drawPoints = !drawPoints;
+            
 
         // Generate sheet
         if (newKbState.IsKeyDown(Keys.S) && !oldKbState.IsKeyDown(Keys.S))
@@ -92,12 +82,56 @@ public class RopeSim : SimulationClass
             int ropeNum = 15;
             int pointNum = 20;
             int distance = 25;
-            generateSheet(pointNum, new Vector2( _screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true, true);
+            generateSheet(pointNum, new Vector2(_screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true, true);
         }
 
 
-        oldKbState = newKbState;
+        if (newKbState.IsKeyDown(Keys.R) && !oldKbState.IsKeyDown(Keys.R))
+        {
+            editingRope = !editingRope;
+            if (editingRope) editingCloth = false;
+        }
 
+
+        if (editingRope)
+        {
+            if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
+            {
+                int nextRope = currentRopeEditor;
+
+                if (nextRope + 1 == ropeEditors.Count) nextRope = 0;
+                else nextRope++;
+
+                ropeEditors[currentRopeEditor].isSelected = false;
+
+                currentRopeEditor = nextRope;
+                ropeEditors[currentRopeEditor].isSelected = true;
+            }
+
+            if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
+            {
+                int lastRope = currentRopeEditor;
+
+                if (lastRope - 1 < 0) lastRope = ropeEditors.Count - 1;
+                else lastRope--;
+
+                ropeEditors[currentRopeEditor].isSelected = false;
+
+                currentRopeEditor = lastRope;
+                ropeEditors[currentRopeEditor].isSelected = true;
+            }
+
+
+            ropeEditors[currentRopeEditor].Update();
+
+
+
+        }
+
+
+        
+
+        oldKbState = newKbState;
     }
 
 
@@ -118,15 +152,16 @@ public class RopeSim : SimulationClass
             game1.DrawLine(_spriteBatch, ropes[i].point1.position, ropes[i].point2.position, Color.White, 5f);
         }
 
-        if (drawPoints)
+
+        for (int i = 0; i < entities.Count; i++)
         {
-
-            for (int i = 0; i < entities.Count; i++)
-            {
-                _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, entities[i].colour, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
-            }
-
+           if (drawPoints || entities[i].renderBall) _spriteBatch.Draw(entities[i].sprite, entities[i].position, null, entities[i].colour, 0f, new Vector2(entities[i].sprite.Width / 2f, entities[i].sprite.Height / 2f), 0.5f, SpriteEffects.None, 0f);
         }
+
+
+        
+
+
 
         _spriteBatch.End();
     }
@@ -154,6 +189,10 @@ public class RopeSim : SimulationClass
             generatedRope.Add(new Rope(generatedPoints[i], generatedPoints[i + 1], distance, ropes));
 
         }
+
+        ropePoints.Add(generatedPoints);
+
+        ropeEditors.Add(new RopeEditor(generatedPoints));
 
     }
 
@@ -219,6 +258,8 @@ public class RopeSim : SimulationClass
                 sheetRopes.Add(new Rope(allPoints[i][j], allPoints[i + 1][j], sheetDistance, ropes));
             }
         }
+
+        sheetPoints.Add(allPoints);
     }
 
 
@@ -226,6 +267,7 @@ public class RopeSim : SimulationClass
     {
         ropes = new List<Rope>();
         entities = new List<Entity>();
+        ropeEditors = new List<RopeEditor>();
     }
 
     private void addRope()

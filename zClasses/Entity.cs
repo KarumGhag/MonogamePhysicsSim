@@ -17,6 +17,8 @@ public class Entity
 
     public Color colour;
 
+    public bool renderBall = false;
+
     public Entity(Texture2D sprite, Vector2 position, List<Entity> entities, Color? colour = null)
     {
         this.sprite = sprite;
