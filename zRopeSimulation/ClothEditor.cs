@@ -37,6 +37,12 @@ class ClothEditor
     private List<List<Rope>> verticalRopes = new List<List<Rope>>();
     private List<List<Rope>> horizontalRopes = new List<List<Rope>>();
 
+
+    Rope[] nearestFourRopes = new Rope[4];
+    private int selectedPosInArr = 1;
+    private Rope selectedRope;
+
+
     private int currentPointX = 0;
     private int currentPointY = 0;
 
@@ -56,6 +62,8 @@ class ClothEditor
         maxX = points.Count;
         maxY = points[0].Count;
 
+        selectedRope = verticalRopes[currentPointX][currentPointY];
+
         oldKbState = Keyboard.GetState();
     }
 
@@ -66,6 +74,7 @@ class ClothEditor
             Deselect();
             return;
         }
+        SolveRope();
 
         newKbState = Keyboard.GetState();
 
@@ -79,11 +88,13 @@ class ClothEditor
 
         points[currentPointX][currentPointY].renderBall = true;
 
-        AllRopesGreen();
+        if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) SelectLastRope();
+        if (newKbState.IsKeyDown(Keys.X) && !oldKbState.IsKeyDown(Keys.X)) SelectNextRope();
+
+        selectedRope = nearestFourRopes[selectedPosInArr];
 
 
-        SolveRope();
-
+        selectedRope.colour = Color.Red;
 
         oldKbState = Keyboard.GetState();
 
@@ -167,10 +178,13 @@ class ClothEditor
 
 
     }
+
     private void SolveRope()
     {
 
-        Rope[] nearestFourRopes = new Rope[4];
+        AllRopesGreen();
+
+
         bool[] offClothRopes = new bool[4] { false, false, false, false };
 
         if (currentPointY == 0) offClothRopes[0] = true; // Above
@@ -183,33 +197,45 @@ class ClothEditor
 
         if (!offClothRopes[0]) // Above
         {
-            verticalRopes[currentPointX][currentPointY - 1].colour = Color.Yellow;
+            verticalRopes[currentPointX][currentPointY - 1].colour = Color.Pink;
             nearestFourRopes[0] = verticalRopes[currentPointX][currentPointY - 1];
         }
+        else if (selectedPosInArr == 0) selectedPosInArr++;
+
         if (!offClothRopes[2]) // Below
         {
-            verticalRopes[currentPointX][currentPointY].colour = Color.Yellow;
+            verticalRopes[currentPointX][currentPointY].colour = Color.Pink;
             nearestFourRopes[2] = verticalRopes[currentPointX][currentPointY];
         }
+        else if (selectedPosInArr == 2) selectedPosInArr++;
 
         if (!offClothRopes[3]) // Left
         {
-            horizontalRopes[currentPointX - 1][currentPointY].colour = Color.Yellow;
+            horizontalRopes[currentPointX - 1][currentPointY].colour = Color.Pink;
             nearestFourRopes[3] = horizontalRopes[currentPointX - 1][currentPointY];
         }
+        else if (selectedPosInArr == 3) selectedPosInArr = 0;
+
         if (!offClothRopes[1]) // Right
         {
-            horizontalRopes[currentPointX][currentPointY].colour = Color.Yellow;
+            horizontalRopes[currentPointX][currentPointY].colour = Color.Pink;
             nearestFourRopes[1] = horizontalRopes[currentPointX][currentPointY];
         }
+        else if (selectedPosInArr == 1) selectedPosInArr++;
 
     }
 
+    private void SelectNextRope()
+    {
+        selectedPosInArr++;
+        if (selectedPosInArr > 3) selectedPosInArr = 0;
+    }
 
-
-    //    |
-    //   - -
-    //    |
+    private void SelectLastRope()
+    {
+        selectedPosInArr--;
+        if (selectedPosInArr < 0) selectedPosInArr = 3;
+    }
 
 
 

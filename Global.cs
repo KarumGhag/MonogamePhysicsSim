@@ -24,7 +24,7 @@ public static class Global
 
     public static Color backgroundColour = Color.Black;
     public static Color defaultRopeColour = Color.White;
-    public static Color selectedRopeColour = Color.LightGreen;
+    public static Color selectedRopeColour = Color.Lime;
     public static Color defaultPointColour = Color.Blue;
 
     public static float GetVectorLen(Vector2 vector)
