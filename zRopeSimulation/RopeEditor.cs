@@ -64,19 +64,13 @@ class RopeEditor
         newKbState = Keyboard.GetState();
 
         if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right)) currentSelected = GetNext();
-
         if (newKbState.IsKeyDown(Keys.Down) && !oldKbState.IsKeyDown(Keys.Down)) currentSelected = GetNext();
-
-
         if (newKbState.IsKeyDown(Keys.Left) && !oldKbState.IsKeyDown(Keys.Left)) currentSelected = GetLast();
-
         if (newKbState.IsKeyDown(Keys.Up) && !oldKbState.IsKeyDown(Keys.Up)) currentSelected = GetLast();
-
-
         if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) currentRope = GetNextRope();
-
         if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) CutRope();
         if (newKbState.IsKeyDown(Keys.G) && !oldKbState.IsKeyDown(Keys.G)) points[currentSelected].stationary = !points[currentSelected].stationary;
+        if (newKbState.IsKeyDown(Keys.J) && !oldKbState.IsKeyDown(Keys.J)) points[currentSelected].grabbed = !points[currentSelected].grabbed;
 
         for (int i = 0; i < points.Count; i++)
         {
@@ -133,6 +127,7 @@ class RopeEditor
         else nextPoint++;
 
         points[currentSelected].renderBall = false;
+        points[currentSelected].grabbed = false;
 
         ropes[currentRope].colour = Global.selectedRopeColour;
         currentRope++;
@@ -152,6 +147,7 @@ class RopeEditor
         else lastPoint--;
 
         points[currentSelected].renderBall = false;
+        points[currentSelected].grabbed = false;
 
         ropes[currentRope].colour = Global.selectedRopeColour;
         currentRope--;

@@ -41,9 +41,10 @@ S = Add cloth
 
 R = Toggle whether editing ropes or not:
     Arrow keys to go up or down across rope
-    C = cut red rope and repair grey ropes
-    Z = swap whether above rope or below rope selected
-    G = toggle anchor
+    C = Cut red rope and repair grey ropes
+    Z = Swap whether above rope or below rope selected
+    G = Toggle anchor
+    J = Grab
 
 T = Toggle whether editing cloths or not:
     Arrow keys to select point
@@ -53,6 +54,8 @@ T = Toggle whether editing cloths or not:
     N = cut all ropes around the point, does not repair
     M = Repair all of the cloth (a bit buggy but does work if you repair some then break some then repair again)
     G = Toggle anchor
+    H = Repair nearest 4 (for some reason doesnt do the one on the left)
+    J = Grab
 
 Q/E = cycle through the ropes/clothes to edit
 
@@ -105,6 +108,10 @@ public class RopeSim : SimulationClass
             for (int i = 0; i < verletObjects.Count; i++) verletObjects[i].Update();
 
             for (int i = 0; i < ropes.Count; i++) ropes[i].ConstrainPoints();
+        }
+        else if (pauseMotion)
+        {
+            for (int i = 0; i < verletObjects.Count; i++) if (verletObjects[i].grabbed) verletObjects[i].Update(); // Updates points even when paused if they are grabbed
         }
 
 
@@ -404,6 +411,8 @@ public class RopeSim : SimulationClass
 
         editingRope = false;
         editingCloth = false;
+        currentClothEditor = 0;
+        currentRopeEditor = 0;
         ropeEditors = new List<RopeEditor>();
         clothEditors = new List<ClothEditor>();
     }

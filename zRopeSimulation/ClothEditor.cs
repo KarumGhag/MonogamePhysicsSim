@@ -96,6 +96,9 @@ class ClothEditor
         if (newKbState.IsKeyDown(Keys.N)) CutAll();
         if (newKbState.IsKeyDown(Keys.M)) RepairCloth();
         if (newKbState.IsKeyDown(Keys.G) && !oldKbState.IsKeyDown(Keys.G)) points[currentPointX][currentPointY].stationary = !points[currentPointX][currentPointY].stationary;
+        if (newKbState.IsKeyDown(Keys.H)) RepairNearest();
+        if (newKbState.IsKeyDown(Keys.J) && !oldKbState.IsKeyDown(Keys.J)) points[currentPointX][currentPointY].grabbed = !points[currentPointX][currentPointY].grabbed;
+    
 
         // Makes stationary points stationary colour, the rest to default colour
         for (int i = 0; i < points.Count; i++)
@@ -110,7 +113,7 @@ class ClothEditor
         // Makes selected point the editing point colour and sets the selected rope to the correct rope
         points[currentPointX][currentPointY].colour = Global.editingPointColour;
         selectedRope = nearestFourRopes[selectedPosInArr];
-        
+
         // Next 2 set vertical and horizontal active and inactive ropes to either render or not
         for (int i = 0; i < verticalRopes.Count; i++)
         {
@@ -161,7 +164,7 @@ class ClothEditor
             for (int j = 0; j < horizontalRopes[i].Count; j++)
             {
                 horizontalRopes[i][j].colour = Global.defaultRopeColour;
-                if (!horizontalRopes[i][j].active) verticalRopes[i][j].colour = Global.backgroundColour;
+                if (!horizontalRopes[i][j].active) horizontalRopes[i][j].colour = Global.backgroundColour;
             }
         }
 
@@ -173,7 +176,7 @@ class ClothEditor
                 if (!verticalRopes[i][j].active) verticalRopes[i][j].renderLine = false;
             }
         }
-        
+
         // Same as above
         for (int i = 0; i < horizontalRopes.Count; i++)
         {
@@ -206,6 +209,7 @@ class ClothEditor
         else belowPoint++;
 
         points[currentPointX][currentPointY].renderBall = false;
+        points[currentPointX][currentPointY].grabbed = false;
 
         SolveRope();
         return belowPoint;
@@ -220,6 +224,7 @@ class ClothEditor
         else abovePoint--;
 
         points[currentPointX][currentPointY].renderBall = false;
+        points[currentPointX][currentPointY].grabbed = false;
 
         SolveRope();
         return abovePoint;
@@ -233,6 +238,7 @@ class ClothEditor
         else rightPoint++;
 
         points[currentPointX][currentPointY].renderBall = false;
+        points[currentPointX][currentPointY].grabbed = false;
 
         return rightPoint;
 
@@ -246,6 +252,7 @@ class ClothEditor
         else leftPoint--;
 
         points[currentPointX][currentPointY].renderBall = false;
+        points[currentPointX][currentPointY].grabbed = false;
 
         return leftPoint;
     }
@@ -314,7 +321,7 @@ class ClothEditor
         for (int i = 0; i < nearestFourRopes.Length; i++)
         {
             if (nearestFourRopes[i] == null) continue;
-            nearestFourRopes[i].colour = nearestFourColour; 
+            nearestFourRopes[i].colour = nearestFourColour;
 
             if (nearestFourRopes[i] == selectedRope) nearestFourRopes[i].colour = Color.Red;
 
@@ -373,6 +380,14 @@ class ClothEditor
             {
                 horizontalRopes[i][j].active = true;
             }
+        }
+    }
+
+    private void RepairNearest()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (nearestFourRopes[i] != null) nearestFourRopes[i].active = true;
         }
     }
 

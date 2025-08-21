@@ -26,7 +26,9 @@ public class VerletObject : Entity
 
     public bool stationary = false;
 
-    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(),Color? colour = null ,bool stationary = false, float bounceDamping = 0.5f) : base(sprite, position, entities, colour)
+    public bool grabbed = false;
+
+    public VerletObject(Texture2D sprite, Vector2 position, List<Entity> entities, List<VerletObject> verletObjects, Vector2 startVelocity = new Vector2(), Color? colour = null, bool stationary = false, float bounceDamping = 0.5f) : base(sprite, position, entities, colour)
     {
         oldPosition = position - startVelocity;
         velocity = position - oldPosition;
@@ -40,14 +42,16 @@ public class VerletObject : Entity
     public virtual void Update()
     {
 
-        if (!stationary)
+        if (grabbed) position = new Vector2(Global.mouseState.X, Global.mouseState.Y);
+
+        if (!stationary && !grabbed)
         {
             velocity = (position - oldPosition) * firction;
 
             oldPosition = position;
 
             position += velocity;
-            position.Y += gravity;            
+            position.Y += gravity;
         }
 
 
