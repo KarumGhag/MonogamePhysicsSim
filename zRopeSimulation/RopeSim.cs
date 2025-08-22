@@ -21,6 +21,7 @@ using RopeEdit;
 using ClothEdit;
 using System.Collections.Concurrent;
 using Microsoft.Xna.Framework.Media;
+using System.Net.Sockets;
 
 namespace RopeSimulation;
 
@@ -39,23 +40,23 @@ D = Add single rope
 A = Add many rope
 S = Add cloth
 
-R = Toggle whether editing ropes or not:
+1 = Toggle whether editing ropes or not:
     Arrow keys to go up or down across rope
     C = Cut red rope and repair grey ropes
-    Z = Swap whether above rope or below rope selected
-    G = Toggle anchor
-    J = Grab
+    X = Swap whether above rope or below rope selected
+    F = Toggle anchor
+    G = Grab
 
-T = Toggle whether editing cloths or not:
+2 = Toggle whether editing cloths or not:
     Arrow keys to select point
-    Z = go forward through brown/light grey ropes (red/dark grey indicates the currently selected one)
-    X = same as Z but backwards
+    X = go forward through brown/light grey ropes (red/dark grey indicates the currently selected one)
+    Z = same as X but backwards
     C = cut red rope and repair dark grey rope
-    N = cut all ropes around the point, does not repair
-    M = Repair all of the cloth (a bit buggy but does work if you repair some then break some then repair again)
-    G = Toggle anchor
-    H = Repair nearest 4 (for some reason doesnt do the one on the left)
-    J = Grab
+    V = cut all ropes around the point, does not repair
+    B = Repair all of the cloth (a bit buggy but does work if you repair some then break some then repair again)
+    N = Repair nearest 4 (for some reason doesnt do the one on the left)
+    F = Toggle anchor
+    G = Grab
 
 Q/E = cycle through the ropes/clothes to edit
 
@@ -65,6 +66,37 @@ Q/E = cycle through the ropes/clothes to edit
 
 public class RopeSim : SimulationClass
 {
+
+    // Controls
+
+    public static Keys makeRope = Keys.D;
+    public static Keys makeManyRope = Keys.A;
+    public static Keys makeCloth = Keys.S;
+    public static Keys drawPointToggle = Keys.W;
+    public static Keys clearSim = Keys.Space;
+    public static Keys editRope = Keys.D1;
+    public static Keys editCloth = Keys.D2;
+    public static Keys nextEdit = Keys.E;
+    public static Keys lastEdit = Keys.Q;
+
+
+    public static Keys pause = Keys.P;
+    public static Keys stepOne = Keys.D0;
+    public static Keys stepMany = Keys.D9;
+
+
+    public static Keys cutRope = Keys.C;
+    public static Keys cutNearest = Keys.V;
+    public static Keys repairCloth = Keys.B;
+    public static Keys repairNearest = Keys.N;
+    public static Keys grabPoint = Keys.G;
+    public static Keys anchorPoint = Keys.F;
+    public static Keys ropeCycleForward = Keys.X;
+    public static Keys ropeCycleBackward = Keys.Z;
+
+
+
+    
 
     private bool pauseMotion = false;
     public List<Entity> entities = new List<Entity>();
@@ -96,9 +128,10 @@ public class RopeSim : SimulationClass
 
         base.Update(gameTime);
 
+
         stepThrough += 1f;
 
-        if (!pauseMotion || (newKbState.IsKeyDown(Keys.B) && !oldKbState.IsKeyDown(Keys.B)) || (newKbState.IsKeyDown(Keys.V) && stepThrough % 2 == 0))
+        if (!pauseMotion || Global.CheckTap(stepOne) || (Global.newKb.IsKeyDown(stepMany) && stepThrough % 2 == 0))
         {
 
             for (int i = 0; i < springs.Count; i++) springs[i].ApplyForce();
@@ -116,7 +149,7 @@ public class RopeSim : SimulationClass
 
 
 
-        if (newKbState.IsKeyDown(Keys.R) && !oldKbState.IsKeyDown(Keys.R) && ropeEditors.Count > 0)
+        if (Global.CheckTap(editRope) && ropeEditors.Count > 0)
         {
             if (editingRope) ropeEditors[currentRopeEditor].isSelected = false;
             ropeEditors[currentRopeEditor].Update();
@@ -134,7 +167,7 @@ public class RopeSim : SimulationClass
             }
         }
 
-        if (newKbState.IsKeyDown(Keys.T) && !oldKbState.IsKeyDown(Keys.T) && clothEditors.Count > 0)
+        if (Global.CheckTap(editCloth) && clothEditors.Count > 0)
         {
 
             if (editingCloth) clothEditors[currentClothEditor].isSelected = false;
@@ -158,7 +191,7 @@ public class RopeSim : SimulationClass
         {
             ropeEditors[currentRopeEditor].isSelected = true;
 
-            if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
+            if (Global.CheckTap(nextEdit))
             {
                 int nextRope = currentRopeEditor;
 
@@ -172,7 +205,7 @@ public class RopeSim : SimulationClass
                 ropeEditors[currentRopeEditor].isSelected = true;
             }
 
-            if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
+            if (Global.CheckTap(lastEdit))
             {
                 int lastRope = currentRopeEditor;
 
@@ -194,7 +227,7 @@ public class RopeSim : SimulationClass
         {
             clothEditors[currentClothEditor].isSelected = true;
 
-            if (newKbState.IsKeyDown(Keys.E) && !oldKbState.IsKeyDown(Keys.E))
+            if (Global.CheckTap(nextEdit))
             {
                 int nextCloth = currentClothEditor;
 
@@ -208,7 +241,7 @@ public class RopeSim : SimulationClass
                 clothEditors[currentClothEditor].isSelected = true;
             }
 
-            if (newKbState.IsKeyDown(Keys.Q) && !oldKbState.IsKeyDown(Keys.Q))
+            if (Global.CheckTap(lastEdit))
             {
                 int lastCloth = currentClothEditor;
 
@@ -226,23 +259,23 @@ public class RopeSim : SimulationClass
         }
 
         // Delete all ropes
-        if (newKbState.IsKeyDown(Keys.Space)) resetRope();
+        if (Global.CheckTap(clearSim)) resetRope();
 
         // Add many ropes
-        if (newKbState.IsKeyDown(Keys.A)) addRope();
+        if (Global.CheckTap(makeManyRope)) addRope();
 
         // Add Single rope
-        if (newKbState.IsKeyDown(Keys.D) && !oldKbState.IsKeyDown(Keys.D)) addRope();
+        if (Global.CheckTap(makeRope)) addRope();
 
         // Toggle drawing of points
-        if (newKbState.IsKeyDown(Keys.W) && !oldKbState.IsKeyDown(Keys.W)) drawPoints = !drawPoints;
+        if (Global.CheckTap(drawPointToggle)) drawPoints = !drawPoints;
 
         // Pause
-        if (newKbState.IsKeyDown(Keys.P) && !oldKbState.IsKeyDown(Keys.P)) pauseMotion = !pauseMotion;
+        if (Global.CheckTap(pause)) pauseMotion = !pauseMotion;
 
 
         // Generate sheet
-        if (newKbState.IsKeyDown(Keys.S) && !oldKbState.IsKeyDown(Keys.S))
+        if (Global.CheckTap(makeCloth))
         {
             int sheetDistance = 25;
             int ropeNum = 15;
@@ -251,7 +284,7 @@ public class RopeSim : SimulationClass
             generateSheet(pointNum, new Vector2(_screenWidth / 2 - (sheetDistance * ropeNum) / 2, 50), distance, ropeNum, sheetDistance, true);
         }
 
-        oldKbState = newKbState;
+
     }
 
 

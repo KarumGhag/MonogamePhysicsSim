@@ -29,10 +29,6 @@ namespace ClothEdit;
 class ClothEditor
 {
 
-    private KeyboardState newKbState;
-    private KeyboardState oldKbState;
-
-
     private List<List<VerletObject>> points = new List<List<VerletObject>>(); // points[x][y]
     private List<List<Rope>> verticalRopes = new List<List<Rope>>();
     private List<List<Rope>> horizontalRopes = new List<List<Rope>>();
@@ -66,7 +62,6 @@ class ClothEditor
 
         selectedRope = verticalRopes[currentPointX][currentPointY];
 
-        oldKbState = Keyboard.GetState();
     }
 
     public void Update()
@@ -78,26 +73,26 @@ class ClothEditor
         }
         SolveRope();
 
-        newKbState = Keyboard.GetState();
+        if (Global.CheckTap(Keys.Down)) currentPointY = DownPoint();
+        if (Global.CheckTap(Keys.Up)) currentPointY = UpPoint();
 
-
-        if (newKbState.IsKeyDown(Keys.Down) && !oldKbState.IsKeyDown(Keys.Down)) currentPointY = DownPoint();
-        if (newKbState.IsKeyDown(Keys.Up) && !oldKbState.IsKeyDown(Keys.Up)) currentPointY = UpPoint();
-
-        if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right)) currentPointX = RightPoint();
-        if (newKbState.IsKeyDown(Keys.Left) && !oldKbState.IsKeyDown(Keys.Left)) currentPointX = LeftPoint();
+        if (Global.CheckTap(Keys.Right)) currentPointX = RightPoint();
+        if (Global.CheckTap(Keys.Left)) currentPointX = LeftPoint();
 
 
         points[currentPointX][currentPointY].renderBall = true;
 
-        if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) SelectLastRope();
-        if (newKbState.IsKeyDown(Keys.X) && !oldKbState.IsKeyDown(Keys.X)) SelectNextRope();
-        if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) CutRope();
-        if (newKbState.IsKeyDown(Keys.N)) CutAll();
-        if (newKbState.IsKeyDown(Keys.M)) RepairCloth();
-        if (newKbState.IsKeyDown(Keys.G) && !oldKbState.IsKeyDown(Keys.G)) points[currentPointX][currentPointY].stationary = !points[currentPointX][currentPointY].stationary;
-        if (newKbState.IsKeyDown(Keys.H)) RepairNearest();
-        if (newKbState.IsKeyDown(Keys.J) && !oldKbState.IsKeyDown(Keys.J)) points[currentPointX][currentPointY].grabbed = !points[currentPointX][currentPointY].grabbed;
+        if (Global.CheckTap(RopeSim.ropeCycleForward)) SelectNextRope();
+        if (Global.CheckTap(RopeSim.ropeCycleBackward)) SelectLastRope();
+
+        if (Global.CheckTap(RopeSim.cutRope)) CutRope();
+        if (Global.newKb.IsKeyDown(RopeSim.cutNearest)) CutAll();
+
+        if (Global.newKb.IsKeyDown(RopeSim.repairCloth)) RepairCloth();
+        if (Global.newKb.IsKeyDown(RopeSim.repairNearest)) RepairNearest();
+        
+        if (Global.CheckTap(RopeSim.anchorPoint)) points[currentPointX][currentPointY].stationary = !points[currentPointX][currentPointY].stationary;
+        if (Global.CheckTap(RopeSim.grabPoint)) points[currentPointX][currentPointY].grabbed = !points[currentPointX][currentPointY].grabbed;
     
 
         // Makes stationary points stationary colour, the rest to default colour
@@ -134,13 +129,7 @@ class ClothEditor
         }
 
         // Makes nearest 4 always render
-        for (int i = 0; i < 4; i++)
-        {
-            if (nearestFourRopes[i] != null) nearestFourRopes[i].renderLine = true;
-        }
-
-
-        oldKbState = Keyboard.GetState();
+        for (int i = 0; i < 4; i++) if (nearestFourRopes[i] != null) nearestFourRopes[i].renderLine = true;
 
     }
 
@@ -345,6 +334,7 @@ class ClothEditor
     {
         selectedPosInArr++;
         if (selectedPosInArr > 3) selectedPosInArr = 0;
+        SolveRope();
     }
 
     private void SelectLastRope()
@@ -391,7 +381,7 @@ class ClothEditor
 
     private void RepairNearest()
     {
-        for (int i = 0; i < 4;   i++)
+        for (int i = 0; i < 4; i++)
         {
             if (nearestFourRopes[i] != null) nearestFourRopes[i].active = true;
         }

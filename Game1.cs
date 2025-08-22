@@ -108,11 +108,15 @@ public class Game1 : Game
         Global.gameTime = gameTime;
         Global.deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+        Global.newKb = Keyboard.GetState();
+
         // Updates the currently in use simulation
         if (x % 2 == 0)
         {
             currentSimulation.Update(gameTime);
         }
+
+        Global.oldKb = Keyboard.GetState();
 
         base.Update(gameTime);
     }
@@ -122,7 +126,9 @@ public class Game1 : Game
         GraphicsDevice.Clear(Global.backgroundColour);
 
         // Draws the currently in use simulation
+
         currentSimulation.Draw(gameTime);
+
 
         // Cleans the screen
         base.Draw(gameTime);

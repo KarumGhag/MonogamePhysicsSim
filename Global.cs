@@ -30,6 +30,15 @@ public static class Global
     public static Color stationaryPointColour = Color.Red;
     public static Color editingPointColour = Color.SkyBlue;
 
+    public static KeyboardState newKb;
+    public static KeyboardState oldKb;
+
+
+    public static bool CheckTap(Keys key)
+    {
+        return newKb.IsKeyDown(key) && !oldKb.IsKeyDown(key);
+    }
+
     public static float GetVectorLen(Vector2 vector)
     {
         double xLen = Math.Pow(vector.X, 2);

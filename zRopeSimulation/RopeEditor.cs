@@ -36,8 +36,6 @@ class RopeEditor
 
     public bool isSelected = false;
 
-    private KeyboardState newKbState;
-    private KeyboardState oldKbState;
 
     public RopeEditor(List<VerletObject> points, List<Rope> ropes)
     {
@@ -45,8 +43,6 @@ class RopeEditor
 
         this.points = points;
         this.ropes = ropes;
-
-        oldKbState = Keyboard.GetState();
 
     }
 
@@ -61,16 +57,15 @@ class RopeEditor
             return;
         }
 
-        newKbState = Keyboard.GetState();
+        if (Global.CheckTap(Keys.Right)) currentSelected = GetNext();
+        if (Global.CheckTap(Keys.Down)) currentSelected = GetNext();
+        if (Global.CheckTap(Keys.Left)) currentSelected = GetLast();
+        if (Global.CheckTap(Keys.Up)) currentSelected = GetLast();
 
-        if (newKbState.IsKeyDown(Keys.Right) && !oldKbState.IsKeyDown(Keys.Right)) currentSelected = GetNext();
-        if (newKbState.IsKeyDown(Keys.Down) && !oldKbState.IsKeyDown(Keys.Down)) currentSelected = GetNext();
-        if (newKbState.IsKeyDown(Keys.Left) && !oldKbState.IsKeyDown(Keys.Left)) currentSelected = GetLast();
-        if (newKbState.IsKeyDown(Keys.Up) && !oldKbState.IsKeyDown(Keys.Up)) currentSelected = GetLast();
-        if (newKbState.IsKeyDown(Keys.Z) && !oldKbState.IsKeyDown(Keys.Z)) currentRope = GetNextRope();
-        if (newKbState.IsKeyDown(Keys.C) && !oldKbState.IsKeyDown(Keys.C)) CutRope();
-        if (newKbState.IsKeyDown(Keys.G) && !oldKbState.IsKeyDown(Keys.G)) points[currentSelected].stationary = !points[currentSelected].stationary;
-        if (newKbState.IsKeyDown(Keys.J) && !oldKbState.IsKeyDown(Keys.J)) points[currentSelected].grabbed = !points[currentSelected].grabbed;
+        if (Global.CheckTap(RopeSim.ropeCycleForward)) currentRope = GetNextRope();
+        if (Global.CheckTap(RopeSim.cutRope)) CutRope();
+        if (Global.CheckTap(RopeSim.anchorPoint)) points[currentSelected].stationary = !points[currentSelected].stationary;
+        if (Global.CheckTap(RopeSim.grabPoint)) points[currentSelected].grabbed = !points[currentSelected].grabbed;
 
         for (int i = 0; i < points.Count; i++)
         {
@@ -88,11 +83,6 @@ class RopeEditor
             else if (!ropes[i].active) ropes[i].colour = Global.backgroundColour;
             else if (i != currentRope) ropes[i].colour = Global.selectedRopeColour;
         }
-
-
-
-
-        oldKbState = Keyboard.GetState();
     }
 
     private void CutRope()

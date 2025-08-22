@@ -26,9 +26,6 @@ public class SimulationClass
     public int _screenWidth;
     public int _screenHeight;
 
-    public KeyboardState newKbState;
-    public KeyboardState oldKbState;
-
 
     public string SimulationName;
 
@@ -40,14 +37,12 @@ public class SimulationClass
         _screenWidth = Global.width;
         _screenHeight = Global.height;
 
-        oldKbState = Keyboard.GetState();
 
     }
 
 
     public virtual void Update(GameTime gameTime)
     {
-        newKbState = Keyboard.GetState();
     }
 
     public virtual void Draw(GameTime gameTime)
