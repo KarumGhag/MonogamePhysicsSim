@@ -240,6 +240,7 @@ class ClothEditor
         points[currentPointX][currentPointY].renderBall = false;
         points[currentPointX][currentPointY].grabbed = false;
 
+        SolveRope();
         return rightPoint;
 
     }
@@ -254,6 +255,7 @@ class ClothEditor
         points[currentPointX][currentPointY].renderBall = false;
         points[currentPointX][currentPointY].grabbed = false;
 
+        SolveRope();
         return leftPoint;
     }
 
