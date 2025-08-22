@@ -132,7 +132,7 @@ class RopeEditor
         ropes[currentRope].colour = Global.selectedRopeColour;
         currentRope++;
 
-        SolveRope(nextPoint);
+        FixRope(nextPoint);
         return nextPoint;
     }
 
@@ -152,7 +152,7 @@ class RopeEditor
         ropes[currentRope].colour = Global.selectedRopeColour;
         currentRope--;
 
-        SolveRope(lastPoint);
+        FixRope(lastPoint);
         return lastPoint;
     }
 
@@ -169,7 +169,7 @@ class RopeEditor
         return nextRope;
     }
 
-    private void SolveRope(int pos)
+    private void FixRope(int pos)
     {
         if (pos == 0) currentRope = 0;
         if (pos == points.Count - 1) currentRope = pos - 1;

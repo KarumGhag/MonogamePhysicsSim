@@ -134,7 +134,7 @@ class ClothEditor
         }
 
         // Makes nearest 4 always render
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (nearestFourRopes[i] != null) nearestFourRopes[i].renderLine = true;
         }
@@ -288,10 +288,15 @@ class ClothEditor
 
         ColourRopes();
 
+        for (int i = 0; i < 4; i++)
+        {
+            nearestFourRopes[i] = null;
+        }
+
 
         bool[] offClothRopes = new bool[4] { false, false, false, false };
 
-        //Checks in a direction as to whether it is off screen or not, if it is then it will skip over this point when setting what the nearest four ropes are
+        //Checks in a direction as to whether it is off cloth or not, if it is then it will skip over this point when setting what the nearest four ropes are
 
         if (currentPointY == 0) offClothRopes[0] = true; // Above
         if (currentPointY == maxY - 1) offClothRopes[2] = true; // Below
@@ -332,7 +337,6 @@ class ClothEditor
 
 
         }
-
 
     }
 
@@ -387,7 +391,7 @@ class ClothEditor
 
     private void RepairNearest()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4;   i++)
         {
             if (nearestFourRopes[i] != null) nearestFourRopes[i].active = true;
         }
